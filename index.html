@@ -3,172 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lumiramahome Catalogue Fixed</title>
+    <title>Lumiramahome - V15 Perfect Print</title>
     
-    <!-- Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #1e40af; /* Blue */
-            --accent: #d97706;  /* Orange/Gold */
-            --bg: #f3f4f6;
+            --primary: #1e3a8a;
+            --accent: #d97706;
+            --bg: #f1f5f9;
             --white: #ffffff;
-            --text: #1f2937;
+            --line: #dc2626;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Roboto', sans-serif; background: var(--bg); padding-bottom: 100px; }
+
+        /* HEADER & UI */
+        .navbar { background: var(--white); padding: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .logo { font-family: 'Oswald', sans-serif; font-size: 1.5rem; color: var(--primary); letter-spacing: 1px; }
+
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+
+        /* CARDS */
+        .card { background: var(--white); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.03); margin-bottom: 20px; border: 1px solid #e2e8f0; }
+        .head-title { font-weight: 700; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
         
-        body { 
-            font-family: 'Roboto', sans-serif; 
-            background: var(--bg); 
-            padding-bottom: 100px;
-        }
-
-        /* --- UI HEADER --- */
-        .navbar {
-            background: var(--white); padding: 15px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            text-align: center; position: sticky; top: 0; z-index: 50;
-        }
-        .logo { font-family: 'Oswald', sans-serif; font-size: 1.4rem; color: var(--primary); letter-spacing: 1px; }
-
-        /* --- FORM CONTAINER --- */
-        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .full { grid-column: span 2; }
         
-        .card {
-            background: var(--white); padding: 20px; border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px;
-        }
+        label { display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #f8fafc; font-size: 0.95rem; }
+        input:focus { border-color: var(--primary); outline: none; background: #fff; }
 
-        /* Inputs */
-        .label { font-size: 0.85rem; font-weight: 600; color: #555; margin-bottom: 5px; display: block; }
-        .input-field {
-            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
-            font-size: 1rem; margin-bottom: 15px; background: #f9fafb;
-        }
-        .input-field:focus { border-color: var(--primary); outline: none; background: #fff; }
+        .upload-box { border: 2px dashed #cbd5e1; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; background: #fff; position: relative; transition: 0.2s; }
+        .upload-box:hover { border-color: var(--primary); background: #eff6ff; }
+        .mini-preview { width: 100%; height: 120px; object-fit: contain; display: none; margin-top: 5px; }
 
-        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .var-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 10px; position: relative; }
+        .btn-del { position: absolute; top: 10px; right: 10px; color: red; background: none; border: none; font-size: 1.1rem; cursor: pointer; }
 
-        /* Dims Box */
-        .dims-box {
-            background: #eff6ff; padding: 15px; border-radius: 8px; 
-            border: 1px dashed #bfdbfe; margin-bottom: 15px;
-        }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; gap: 8px; font-size: 1rem; }
+        .btn-add { background: var(--accent); color: white; margin-bottom: 10px; }
+        .btn-gen { background: #16a34a; color: white; }
+        .btn-reset { background: #ef4444; color: white; margin-top: 10px; }
 
-        /* Image Upload */
-        .upload-btn {
-            border: 2px dashed #ddd; padding: 20px; text-align: center; border-radius: 8px;
-            cursor: pointer; background: white; margin-bottom: 20px;
-        }
-        .upload-preview { width: 100%; height: 150px; object-fit: contain; display: none; margin-top: 10px; }
-
-        /* Buttons */
-        .btn {
-            width: 100%; padding: 15px; border: none; border-radius: 8px;
-            font-weight: bold; font-size: 1rem; cursor: pointer; color: white;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-        }
-        .btn-add { background: var(--primary); margin-bottom: 10px; }
-        .btn-gen { background: #10b981; }
-
-        /* --- CATALOGUE STYLE (STRICT LTR) --- */
+        /* --- CATALOGUE VIEW (FIXED FOR PDF) --- */
         #catalog-view { display: none; }
-
+        
         #final-catalog {
-            background: white;
-            width: 210mm;
+            background: white; 
+            width: 210mm; /* A4 Width */
             min-height: 297mm;
+            height: auto;
             margin: 0 auto;
-            padding: 15mm;
-            /* FORCE LTR DIRECTION TO FIX OVERLAP */
+            padding: 20px 30px; /* Padding for margins */
             direction: ltr !important; 
             text-align: left !important;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden; /* Prevent overflow */
         }
 
-        .cat-header {
-            text-align: center; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px;
-        }
-        .cat-h1 { font-family: 'Oswald', sans-serif; font-size: 2.5rem; color: var(--primary); text-transform: uppercase; }
+        .cat-header { text-align: center; margin-bottom: 20px; border-bottom: 3px solid var(--primary); padding-bottom: 10px; }
+        .cat-logo { font-family: 'Oswald', sans-serif; font-size: 2.2rem; color: var(--primary); }
 
-        /* Product Card Layout - Flex Row */
-        .cat-item {
+        /* DUAL IMAGE HEADER - FIXED WIDTHS */
+        .dual-display { 
             display: flex; 
-            flex-direction: row; /* Force Image Left, Text Right */
-            gap: 25px; 
-            padding: 25px 0;
-            border-bottom: 2px solid #000;
+            justify-content: space-between; /* Space out evenly */
+            margin-bottom: 20px; 
             page-break-inside: avoid;
+            width: 100%;
         }
         
-        /* Image Fixed Width */
-        .cat-img-wrap {
-            width: 160px; height: 160px; 
-            flex-shrink: 0; /* Don't shrink */
-            border: 1px solid #eee; 
+        .blueprint-card {
+            width: 48%; /* Each takes less than half */
+            border: 1px solid #ddd; 
+            background: #fff; 
+            padding: 5px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        
+        .bp-label { font-size: 0.9rem; font-weight: bold; background: #f1f5f9; width: 100%; text-align: center; padding: 5px; margin-bottom: 5px; }
+        
+        /* Responsive Image Container */
+        .bp-img-container {
+            position: relative; 
+            width: 100%; /* Fill the card */
+            height: 250px; /* Fixed height */
             display: flex; align-items: center; justify-content: center;
         }
-        .cat-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .bp-img { max-width: 90%; max-height: 90%; object-fit: contain; }
 
-        /* Info Area */
-        .cat-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        /* INFO BAR */
+        .info-bar {
+            background: var(--primary); color: white; padding: 12px; border-radius: 6px;
+            display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr; gap: 5px;
+            margin-bottom: 25px; width: 100%;
+        }
+        .info-item { text-align: center; border-right: 1px solid rgba(255,255,255,0.2); }
+        .info-item:last-child { border-right: none; }
+        .info-lbl { font-size: 0.65rem; opacity: 0.9; text-transform: uppercase; margin-bottom: 2px; }
+        .info-val { font-size: 1rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Title & Price Header */
-        .cat-top {
-            display: flex; justify-content: space-between; align-items: flex-start;
-            margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;
-        }
-        .cat-name {
-            font-size: 1.4rem; font-weight: 800; color: #000; 
-            text-transform: uppercase; max-width: 65%;
-        }
-        .cat-price {
-            background: #000; color: #fff; padding: 5px 15px; 
-            font-weight: 700; font-size: 1.2rem; border-radius: 4px;
+        /* ARROWS */
+        .dim-line { position: absolute; z-index: 10; display: flex; align-items: center; justify-content: center; }
+        .dim-badge { 
+            background: rgba(255,255,255,0.95); border: 1px solid var(--line); color: var(--line); 
+            font-size: 0.7rem; font-weight: 800; padding: 1px 4px; border-radius: 3px; 
             white-space: nowrap;
         }
 
-        /* Specs Grid - No Overlap */
-        .cat-specs {
-            display: grid; 
-            grid-template-columns: 1fr 1fr; /* 2 Columns strict */
-            gap: 8px 20px;
-            font-size: 0.95rem; color: #333;
-        }
-        .spec-row {
-            display: flex; align-items: baseline;
-            overflow: hidden; white-space: nowrap;
-        }
-        .spec-label {
-            font-weight: 700; color: #000; 
-            min-width: 85px; /* Fixed width for label */
-            display: inline-block;
-        }
+        .l-top { top: 5%; left: 10%; right: 10%; height: 2px; border-top: 2px solid var(--line); }
+        .l-top::before, .l-top::after { content:''; position: absolute; top:-4px; width: 2px; height: 10px; background: var(--line); }
+        .l-top::before{left:0;} .l-top::after{right:0;}
+        .l-top .dim-badge { position: absolute; top: -18px; }
+        
+        .l-bot { bottom: 5%; left: 10%; right: 10%; height: 2px; border-bottom: 2px solid var(--line); }
+        .l-bot::before, .l-bot::after { content:''; position: absolute; bottom:-4px; width: 2px; height: 10px; background: var(--line); }
+        .l-bot::before{left:0;} .l-bot::after{right:0;}
+        .l-bot .dim-badge { position: absolute; bottom: -18px; }
+        
+        .l-right { top: 10%; bottom: 10%; right: 2%; width: 2px; border-right: 2px solid var(--line); }
+        .l-right::before, .l-right::after { content:''; position: absolute; right:-4px; height: 2px; width: 10px; background: var(--line); }
+        .l-right::before{top:0;} .l-right::after{bottom:0;}
+        .l-right .dim-badge { position: absolute; right: 8px; transform: rotate(90deg); }
+        
+        .l-circ { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 2px dashed var(--line); border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+        .l-circ .dim-badge { background: var(--line); color: white; border: none; }
 
-        .cat-wholesale {
-            margin-top: 15px; padding: 10px; background: #f0fdf4;
-            border: 2px dashed #166534; color: #166534;
-            text-align: center; font-weight: 700;
+        /* VARIANTS GRID */
+        .v-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .v-card {
+            border: 1px solid #000; padding: 10px; display: flex; gap: 10px; align-items: center;
+            background: #fff; page-break-inside: avoid;
         }
+        .v-img-box { width: 90px; height: 90px; border: 1px solid #eee; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .v-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .v-info { flex: 1; }
+        .v-name { font-weight: 800; font-size: 1.1rem; text-transform: uppercase; }
+        .v-shape { font-size: 0.85rem; color: #555; font-style: italic; margin-bottom: 5px; }
+        .v-price { background: #000; color: #fff; padding: 3px 8px; font-weight: bold; border-radius: 3px; display: inline-block; font-size: 0.95rem; }
 
-        /* Floating Buttons */
-        .fab-box {
-            position: fixed; bottom: 20px; right: 20px; display: none; gap: 10px; flex-direction: column;
-        }
-        .fab {
-            width: 50px; height: 50px; border-radius: 50%; border: none; color: white;
-            font-size: 1.2rem; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
+        .fab-con { position: fixed; bottom: 20px; right: 20px; display: none; flex-direction: column; gap: 10px; z-index: 2000; }
+        .fab { width: 50px; height: 50px; border-radius: 50%; border: none; color: white; font-size: 1.2rem; cursor: pointer; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
-        /* Mobile Preview Scale */
         @media (max-width: 800px) {
-            #final-catalog {
-                transform-origin: top left;
-                transform: scale(0.45);
-                margin-bottom: -150%;
-            }
+            #final-catalog { transform: scale(0.45); transform-origin: top left; margin-bottom: -150%; }
         }
     </style>
     
@@ -184,225 +166,334 @@
     <div class="container">
         <!-- EDITOR -->
         <div id="editor">
-            <div class="card">
-                <form id="form">
-                    <span class="label">Nom du Produit</span>
-                    <input type="text" id="pName" class="input-field" placeholder="Ex: Table basse" required>
-
-                    <div class="row-2">
-                        <div>
-                            <span class="label">Forme</span>
-                            <input type="text" id="pShape" class="input-field" placeholder="Ex: Rond">
-                        </div>
-                        <div>
-                            <span class="label">Couleur</span>
-                            <input type="text" id="pColor" class="input-field" placeholder="Ex: Ral2000">
-                        </div>
-                    </div>
-                    
-                    <span class="label">Poids</span>
-                    <input type="text" id="pWeight" class="input-field" placeholder="Ex: 10 kg">
-
-                    <div class="dims-box">
-                        <span class="label" style="color:#1e40af; margin-bottom:10px;">Dimensions (cm)</span>
-                        <div class="row-2">
-                            <input type="number" id="dL" class="input-field" placeholder="Longueur">
-                            <input type="number" id="dW" class="input-field" placeholder="Largeur">
-                        </div>
-                        <div class="row-2">
-                            <input type="number" id="dH" class="input-field" placeholder="Hauteur">
-                            <input type="number" id="dD" class="input-field" placeholder="Diamètre">
-                        </div>
-                    </div>
-
-                    <div class="row-2">
-                        <div>
-                            <span class="label">Prix (DA)</span>
-                            <input type="number" id="pPrice" class="input-field" placeholder="0">
-                        </div>
-                        <div>
-                            <span class="label">Prix Gros</span>
-                            <input type="number" id="pWhole" class="input-field" placeholder="0">
-                        </div>
-                    </div>
-
-                    <div class="upload-btn" onclick="document.getElementById('pFile').click()">
-                        <i class="fas fa-camera fa-2x" style="color:#ccc"></i>
-                        <p>Ajouter une photo</p>
-                        <img id="prev" class="upload-preview">
-                        <input type="file" id="pFile" hidden accept="image/*" onchange="readImg(this)">
-                        <input type="hidden" id="pBase64">
-                    </div>
-
-                    <button type="submit" class="btn btn-add"><i class="fas fa-plus"></i> Ajouter</button>
-                    <button type="button" class="btn btn-gen" onclick="makeCat()"><i class="fas fa-print"></i> CRÉER CATALOGUE</button>
-                </form>
-            </div>
             
-            <div style="text-align:center; color:#777; margin-bottom:20px;">
-                Produits ajoutés: <span id="count" style="font-weight:bold; color:var(--primary)">0</span>
+            <!-- GLOBAL INFO -->
+            <div class="card">
+                <div class="head-title"><i class="fas fa-info-circle"></i> Informations Générales</div>
+                <div class="grid-2">
+                    <div class="full">
+                        <label>Nom du Produit</label>
+                        <input type="text" id="pName" placeholder="Ex: Ensemble Jardin">
+                    </div>
+                    <div>
+                        <label>Nombre de Chaises</label>
+                        <input type="number" id="nbChair" placeholder="4">
+                    </div>
+                    <div>
+                        <label>Prix de Base (DA)</label>
+                        <input type="number" id="mainPrice" placeholder="Pour remplissage auto">
+                    </div>
+                    <div class="full">
+                        <label>Prix de Gros (Optionnel)</label>
+                        <input type="number" id="mainWhole" placeholder="Pour remplissage auto">
+                    </div>
+                </div>
             </div>
-            <div id="items-list"></div>
+
+            <!-- TABLE CONFIG -->
+            <div class="card" style="border-left: 5px solid var(--primary);">
+                <div class="head-title"><i class="fas fa-table"></i> Configuration TABLE</div>
+                <div class="grid-2">
+                    <div><label>Largeur (Haut)</label><input type="number" id="tW"></div>
+                    <div><label>Longueur (Bas)</label><input type="number" id="tL"></div>
+                    <div><label>Hauteur (Droit)</label><input type="number" id="tH"></div>
+                    <div><label>Diamètre (Ø)</label><input type="number" id="tD"></div>
+                    <div class="full">
+                        <label>Image Table</label>
+                        <div class="upload-box" onclick="document.getElementById('fileTable').click()">
+                            <i class="fas fa-camera"></i> Choisir Image Table
+                            <img id="prevTable" class="mini-preview">
+                            <input type="file" id="fileTable" hidden accept="image/*" onchange="prev(this, 'prevTable', 'b64Table')">
+                            <input type="hidden" id="b64Table">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAIR CONFIG -->
+            <div class="card" style="border-left: 5px solid var(--accent);">
+                <div class="head-title"><i class="fas fa-chair"></i> Configuration CHAISE</div>
+                <div class="grid-2">
+                    <div><label>Largeur (Haut)</label><input type="number" id="cW"></div>
+                    <div><label>Longueur (Bas)</label><input type="number" id="cL"></div>
+                    <div><label>Hauteur (Droit)</label><input type="number" id="cH"></div>
+                    <div><label>Diamètre (Ø)</label><input type="number" id="cD"></div>
+                    <div class="full">
+                        <label>Image Chaise</label>
+                        <div class="upload-box" onclick="document.getElementById('fileChair').click()">
+                            <i class="fas fa-camera"></i> Choisir Image Chaise
+                            <img id="prevChair" class="mini-preview">
+                            <input type="file" id="fileChair" hidden accept="image/*" onchange="prev(this, 'prevChair', 'b64Chair')">
+                            <input type="hidden" id="b64Chair">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VARIANTS -->
+            <div class="card">
+                <div class="head-title"><i class="fas fa-swatchbook"></i> Catalogue (Variantes)</div>
+                <div id="vList"></div>
+                <button class="btn btn-add" onclick="addVar()"><i class="fas fa-plus"></i> Ajouter Variété</button>
+            </div>
+
+            <button class="btn btn-gen" onclick="generate()">GÉNÉRER LE CATALOGUE</button>
+            <button class="btn btn-reset" onclick="resetAll()">Effacer Tout</button>
         </div>
 
-        <!-- CATALOG -->
+        <!-- CATALOGUE -->
         <div id="catalog-view">
             <div id="final-catalog">
                 <div class="cat-header">
-                    <div class="cat-h1">LUMIRAMAHOME</div>
-                    <div style="letter-spacing:2px; margin-top:5px;">CATALOGUE OFFICIEL</div>
-                    <div style="color:#666; font-size:0.9rem; margin-top:5px;" id="catDate"></div>
+                    <div class="cat-logo">LUMIRAMAHOME</div>
+                    <div>CATALOGUE OFFICIEL</div>
+                    <small id="cDate"></small>
                 </div>
-                <div id="cat-content"></div>
+
+                <div id="cContent"></div>
             </div>
         </div>
     </div>
 
-    <div class="fab-box" id="fabs">
-        <button class="fab" style="background:#f59e0b" onclick="editMode()"><i class="fas fa-pen"></i></button>
+    <!-- FABs -->
+    <div class="fab-con" id="fabs">
+        <button class="fab" style="background:#f59e0b" onclick="edit()"><i class="fas fa-pen"></i></button>
         <button class="fab" style="background:#ef4444" onclick="toPDF()"><i class="fas fa-file-pdf"></i></button>
-        <button class="fab" style="background:#10b981" onclick="toExcel()"><i class="fas fa-file-excel"></i></button>
+        <button class="fab" style="background:#10b981" onclick="toXLS()"><i class="fas fa-file-excel"></i></button>
     </div>
 
     <script>
-        let products = [];
-        // Force reset on load to prevent bad cache
+        let vars = [];
+        const noImg = "https://placehold.co/200?text=No+Img";
+
         window.onload = () => {
-            products = JSON.parse(localStorage.getItem('lumi_v6')) || [];
-            renderItems();
-            document.getElementById('catDate').innerText = new Date().toLocaleDateString('fr-FR');
+            loadData();
+            if(vars.length === 0) addVar();
         };
 
-        function readImg(input) {
-            if(input.files[0]) {
+        function prev(inp, imgId, hidId, idx=null) {
+            if(inp.files[0]){
                 const r = new FileReader();
                 r.onload = e => {
-                    document.getElementById('pBase64').value = e.target.result;
-                    document.getElementById('prev').src = e.target.result;
-                    document.getElementById('prev').style.display = 'block';
+                    document.getElementById(hidId).value = e.target.result;
+                    document.getElementById(imgId).src = e.target.result;
+                    document.getElementById(imgId).style.display = 'block';
+                    if(idx !== null) { vars[idx].img = e.target.result; save(); }
+                    else save();
                 };
-                r.readAsDataURL(input.files[0]);
+                r.readAsDataURL(inp.files[0]);
             }
         }
 
-        document.getElementById('form').addEventListener('submit', e => {
-            e.preventDefault();
-            products.push({
-                id: Date.now(),
-                name: document.getElementById('pName').value,
-                shape: document.getElementById('pShape').value,
-                color: document.getElementById('pColor').value,
-                weight: document.getElementById('pWeight').value,
-                l: document.getElementById('dL').value,
-                w: document.getElementById('dW').value,
-                h: document.getElementById('dH').value,
-                d: document.getElementById('dD').value,
-                price: document.getElementById('pPrice').value || "0",
-                whole: document.getElementById('pWhole').value,
-                img: document.getElementById('pBase64').value || "https://placehold.co/150?text=No+Img"
-            });
-            save(); renderItems(); reset();
-        });
-
-        function reset() {
-            document.getElementById('form').reset();
-            document.getElementById('pBase64').value = "";
-            document.getElementById('prev').style.display = "none";
+        function addVar() {
+            const basePrice = document.getElementById('mainPrice').value;
+            const baseWhole = document.getElementById('mainWhole').value;
+            const v = { id: Date.now(), name: '', shape: 'Carré', price: basePrice, whole: baseWhole, img: '' };
+            vars.push(v);
+            renderVar(v, vars.length - 1);
+            save();
         }
 
-        function renderItems() {
-            document.getElementById('count').innerText = products.length;
-            document.getElementById('items-list').innerHTML = products.map(p => `
-                <div style="background:white; padding:10px; margin-bottom:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 4px #eee;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${p.img}" style="width:50px; height:50px; object-fit:cover; border-radius:5px;">
-                        <div><strong>${p.name}</strong><br><small>${p.price} DA</small></div>
+        function renderVar(v, i) {
+            const d = document.createElement('div');
+            d.className = 'var-item';
+            d.innerHTML = `
+                <button class="btn-del" onclick="delVar(${i})"><i class="fas fa-times"></i></button>
+                <div class="grid-2">
+                    <div class="full"><label>Nom Couleur</label><input type="text" value="${v.name}" oninput="updVar(${i},'name',this.value)"></div>
+                    <div>
+                        <label>Forme</label>
+                        <select onchange="updVar(${i},'shape',this.value)">
+                            <option value="Carré" ${v.shape==='Carré'?'selected':''}>Carré</option>
+                            <option value="Rond" ${v.shape==='Rond'?'selected':''}>Rond</option>
+                            <option value="Rectangulaire" ${v.shape==='Rectangulaire'?'selected':''}>Rectangulaire</option>
+                        </select>
                     </div>
-                    <i class="fas fa-trash" style="color:red; cursor:pointer; padding:10px;" onclick="del(${p.id})"></i>
+                    <div><label>Prix (Auto)</label><input type="number" value="${v.price}" oninput="updVar(${i},'price',this.value)"></div>
+                    <div class="full"><label>Gros (Auto)</label><input type="number" value="${v.whole}" oninput="updVar(${i},'whole',this.value)"></div>
+                    <div class="full">
+                        <label>Photo</label>
+                        <div class="upload-box" onclick="document.getElementById('fv-${v.id}').click()" style="padding:10px;">
+                            <span><i class="fas fa-camera"></i></span>
+                            <img id="pv-${v.id}" src="${v.img||''}" style="height:40px;display:${v.img?'inline':'none'};vertical-align:middle;">
+                        </div>
+                        <input type="file" id="fv-${v.id}" hidden accept="image/*" onchange="prev(this, 'pv-${v.id}', 'hv-${v.id}', ${i})">
+                        <input type="hidden" id="hv-${v.id}" value="${v.img}">
+                    </div>
                 </div>
-            `).join('');
+            `;
+            document.getElementById('vList').appendChild(d);
         }
 
-        function del(id) { products = products.filter(p => p.id !== id); save(); renderItems(); }
-        function save() { localStorage.setItem('lumi_v6', JSON.stringify(products)); }
+        function updVar(i, k, val) { vars[i][k] = val; save(); }
+        function delVar(i) { if(confirm('Supprimer?')) { vars.splice(i,1); save(); reloadVars(); } }
+        function reloadVars() { document.getElementById('vList').innerHTML=''; vars.forEach((v,i)=>renderVar(v,i)); }
 
-        function makeCat() {
-            if(!products.length) return alert("Ajoutez des produits !");
+        function save() {
+            const main = {
+                name: document.getElementById('pName').value,
+                nb: document.getElementById('nbChair').value,
+                p: document.getElementById('mainPrice').value,
+                w: document.getElementById('mainWhole').value
+            };
+            const table = {
+                w: document.getElementById('tW').value, l: document.getElementById('tL').value,
+                h: document.getElementById('tH').value, d: document.getElementById('tD').value,
+                img: document.getElementById('b64Table').value
+            };
+            const chair = {
+                w: document.getElementById('cW').value, l: document.getElementById('cL').value,
+                h: document.getElementById('cH').value, d: document.getElementById('cD').value,
+                img: document.getElementById('b64Chair').value
+            };
+            localStorage.setItem('lumi_v15_main', JSON.stringify(main));
+            localStorage.setItem('lumi_v15_table', JSON.stringify(table));
+            localStorage.setItem('lumi_v15_chair', JSON.stringify(chair));
+            localStorage.setItem('lumi_v15_vars', JSON.stringify(vars));
+        }
+
+        function loadData() {
+            const m = JSON.parse(localStorage.getItem('lumi_v15_main'));
+            if(m) {
+                document.getElementById('pName').value = m.name;
+                document.getElementById('nbChair').value = m.nb;
+                document.getElementById('mainPrice').value = m.p;
+                document.getElementById('mainWhole').value = m.w;
+            }
+            const t = JSON.parse(localStorage.getItem('lumi_v15_table'));
+            if(t) {
+                document.getElementById('tW').value = t.w; document.getElementById('tL').value = t.l;
+                document.getElementById('tH').value = t.h; document.getElementById('tD').value = t.d;
+                document.getElementById('b64Table').value = t.img;
+                if(t.img) { document.getElementById('prevTable').src = t.img; document.getElementById('prevTable').style.display='block'; }
+            }
+            const c = JSON.parse(localStorage.getItem('lumi_v15_chair'));
+            if(c) {
+                document.getElementById('cW').value = c.w; document.getElementById('cL').value = c.l;
+                document.getElementById('cH').value = c.h; document.getElementById('cD').value = c.d;
+                document.getElementById('b64Chair').value = c.img;
+                if(c.img) { document.getElementById('prevChair').src = c.img; document.getElementById('prevChair').style.display='block'; }
+            }
+            const v = JSON.parse(localStorage.getItem('lumi_v15_vars'));
+            if(v) { vars = v; reloadVars(); }
+        }
+
+        function resetAll() {
+            localStorage.clear(); location.reload();
+        }
+
+        function getArrowsHTML(w, l, h, d) {
+            let html = '';
+            if(w) html += `<div class="dim-line l-top"><span class="dim-badge">Larg: ${w} cm</span></div>`;
+            if(l) html += `<div class="dim-line l-bot"><span class="dim-badge">Long: ${l} cm</span></div>`;
+            if(h) html += `<div class="dim-line l-right"><span class="dim-badge">Haut: ${h} cm</span></div>`;
+            if(d) html += `<div class="dim-line l-circ"><span class="dim-badge">Ø: ${d}</span></div>`;
+            return html;
+        }
+
+        function generate() {
+            const pName = document.getElementById('pName').value;
+            const nb = document.getElementById('nbChair').value || '0';
+            const price = document.getElementById('mainPrice').value || '0';
+            const wholePrice = document.getElementById('mainWhole').value || '0';
             
+            // Table Data
+            const tImg = document.getElementById('b64Table').value || noImg;
+            const tOvr = getArrowsHTML(
+                document.getElementById('tW').value, document.getElementById('tL').value,
+                document.getElementById('tH').value, document.getElementById('tD').value
+            );
+
+            // Chair Data
+            const cImg = document.getElementById('b64Chair').value || noImg;
+            const cOvr = getArrowsHTML(
+                document.getElementById('cW').value, document.getElementById('cL').value,
+                document.getElementById('cH').value, document.getElementById('cD').value
+            );
+
             document.getElementById('editor').style.display = 'none';
             document.getElementById('catalog-view').style.display = 'block';
             document.getElementById('fabs').style.display = 'flex';
+            document.getElementById('cDate').innerText = new Date().toLocaleDateString('fr-FR');
+
+            const headerHTML = `
+                <div class="dual-display">
+                    <div class="blueprint-card">
+                        <div class="bp-label">TABLE</div>
+                        <div class="bp-img-container"><img src="${tImg}" class="bp-img">${tOvr}</div>
+                    </div>
+                    <div class="blueprint-card">
+                        <div class="bp-label">CHAISE</div>
+                        <div class="bp-img-container"><img src="${cImg}" class="bp-img">${cOvr}</div>
+                    </div>
+                </div>
+            `;
+
+            // Updated Info Bar with Wholesale
+            const infoHTML = `
+                <div class="info-bar">
+                    <div class="info-item"><div class="info-lbl">PRODUIT</div><div class="info-val">${pName}</div></div>
+                    <div class="info-item"><div class="info-lbl">CHAISES</div><div class="info-val">${nb}</div></div>
+                    <div class="info-item"><div class="info-lbl">PRIX BASE</div><div class="info-val">${price} DA</div></div>
+                    <div class="info-item"><div class="info-lbl">PRIX GROS</div><div class="info-val">${wholePrice} DA</div></div>
+                </div>
+            `;
+
+            const gridHTML = vars.map(v => `
+                <div class="v-card">
+                    <div class="v-img-box"><img src="${v.img||noImg}" class="v-img"></div>
+                    <div class="v-info">
+                        <div class="v-name">${v.name || 'Standard'}</div>
+                        <div class="v-shape">${v.shape}</div>
+                        <div class="v-price">${v.price} DA</div>
+                        ${v.whole ? `<div style="font-size:0.8rem;color:green;font-weight:bold;">Gros: ${v.whole} DA</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('cContent').innerHTML = headerHTML + infoHTML + `<div class="v-grid">${gridHTML}</div>`;
             window.scrollTo(0,0);
-
-            document.getElementById('cat-content').innerHTML = products.map(p => {
-                let specs = "";
-                // Strict Label: Value structure
-                if(p.shape) specs += `<div class="spec-row"><span class="spec-label">Forme:</span> ${p.shape}</div>`;
-                if(p.color) specs += `<div class="spec-row"><span class="spec-label">Couleur:</span> ${p.color}</div>`;
-                if(p.weight) specs += `<div class="spec-row"><span class="spec-label">Poids:</span> ${p.weight}</div>`;
-                if(p.l) specs += `<div class="spec-row"><span class="spec-label">Longueur:</span> ${p.l} cm</div>`;
-                if(p.w) specs += `<div class="spec-row"><span class="spec-label">Largeur:</span> ${p.w} cm</div>`;
-                if(p.h) specs += `<div class="spec-row"><span class="spec-label">Hauteur:</span> ${p.h} cm</div>`;
-                if(p.d) specs += `<div class="spec-row"><span class="spec-label">Diamètre:</span> ${p.d} cm</div>`;
-
-                let ws = (p.whole && p.whole != 0) ? 
-                    `<div class="cat-wholesale">PRIX GROS (10+ Pcs) : ${p.whole} DA</div>` : '';
-
-                return `
-                <div class="cat-item">
-                    <div class="cat-img-wrap">
-                        <img src="${p.img}" class="cat-img">
-                    </div>
-                    <div class="cat-info">
-                        <div class="cat-top">
-                            <div class="cat-name">${p.name}</div>
-                            <div class="cat-price">${p.price} DA</div>
-                        </div>
-                        <div class="cat-specs">${specs}</div>
-                        ${ws}
-                    </div>
-                </div>`;
-            }).join('');
         }
 
-        function editMode() {
-            document.getElementById('editor').style.display = 'block';
-            document.getElementById('catalog-view').style.display = 'none';
-            document.getElementById('fabs').style.display = 'none';
-        }
-
-        function toPDF() {
+        function edit() { document.getElementById('editor').style.display = 'block'; document.getElementById('catalog-view').style.display = 'none'; document.getElementById('fabs').style.display = 'none'; }
+        
+        // --- FIXED PDF EXPORT ---
+        function toPDF() { 
             const el = document.getElementById('final-catalog');
-            // Reset mobile transform for clean print
-            el.style.transform = "none";
-            el.style.marginBottom = "0";
             
+            // Temporary Desktop Styling for PDF
+            const origTransform = el.style.transform;
+            el.style.transform = 'none';
+            el.style.width = '210mm';
+            el.style.margin = '0 auto';
+            el.style.marginBottom = '0';
+            el.style.height = 'auto'; // allow expand
+
             const opt = {
-                margin: 0,
-                filename: 'Catalogue.pdf',
+                margin: [5, 5, 5, 5], // 5mm margin all sides
+                filename: `Cat_${document.getElementById('pName').value}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true,
+                    windowWidth: 1024 // Force desktop width capture
+                },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
+            
             html2pdf().set(opt).from(el).save().then(() => {
-                // Restore mobile view
+                // Restore mobile preview style
                 if(window.innerWidth <= 800) {
-                    el.style.transform = "scale(0.45)";
-                    el.style.marginBottom = "-150%";
+                    el.style.transform = 'scale(0.45)';
+                    el.style.transformOrigin = 'top left';
+                    el.style.marginBottom = '-150%';
                 }
             });
         }
         
-        function toExcel() {
-            const data = products.map(p => ({
-                "Produit": p.name, "Prix": p.price, "Gros": p.whole,
-                "Forme": p.shape, "Couleur": p.color, "Poids": p.weight,
-                "L": p.l, "W": p.w, "H": p.h, "D": p.d
-            }));
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Cat");
-            XLSX.writeFile(wb, "Catalogue.xlsx");
+        function toXLS() {
+            const data = vars.map(v => ({ "Produit": document.getElementById('pName').value, "Couleur": v.name, "Forme": v.shape, "Prix": v.price }));
+            XLSX.writeFile(XLSX.utils.book_new(XLSX.utils.book_append_sheet(XLSX.utils.book_new(), XLSX.utils.json_to_sheet(data), "Cat")), "Catalogue.xlsx");
         }
     </script>
 </body>
