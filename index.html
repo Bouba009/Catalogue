@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lumiramahome Catalogue Fixed</title>
+    
+    <!-- Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1e40af; /* Blue */
+            --accent: #d97706;  /* Orange/Gold */
+            --bg: #f3f4f6;
+            --white: #ffffff;
+            --text: #1f2937;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background: var(--bg); 
+            padding-bottom: 100px;
+        }
+
+        /* --- UI HEADER --- */
+        .navbar {
+            background: var(--white); padding: 15px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center; position: sticky; top: 0; z-index: 50;
+        }
+        .logo { font-family: 'Oswald', sans-serif; font-size: 1.4rem; color: var(--primary); letter-spacing: 1px; }
+
+        /* --- FORM CONTAINER --- */
+        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
+        
+        .card {
+            background: var(--white); padding: 20px; border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px;
+        }
+
+        /* Inputs */
+        .label { font-size: 0.85rem; font-weight: 600; color: #555; margin-bottom: 5px; display: block; }
+        .input-field {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+            font-size: 1rem; margin-bottom: 15px; background: #f9fafb;
+        }
+        .input-field:focus { border-color: var(--primary); outline: none; background: #fff; }
+
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        /* Dims Box */
+        .dims-box {
+            background: #eff6ff; padding: 15px; border-radius: 8px; 
+            border: 1px dashed #bfdbfe; margin-bottom: 15px;
+        }
+
+        /* Image Upload */
+        .upload-btn {
+            border: 2px dashed #ddd; padding: 20px; text-align: center; border-radius: 8px;
+            cursor: pointer; background: white; margin-bottom: 20px;
+        }
+        .upload-preview { width: 100%; height: 150px; object-fit: contain; display: none; margin-top: 10px; }
+
+        /* Buttons */
+        .btn {
+            width: 100%; padding: 15px; border: none; border-radius: 8px;
+            font-weight: bold; font-size: 1rem; cursor: pointer; color: white;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn-add { background: var(--primary); margin-bottom: 10px; }
+        .btn-gen { background: #10b981; }
+
+        /* --- CATALOGUE STYLE (STRICT LTR) --- */
+        #catalog-view { display: none; }
+
+        #final-catalog {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 15mm;
+            /* FORCE LTR DIRECTION TO FIX OVERLAP */
+            direction: ltr !important; 
+            text-align: left !important;
+        }
+
+        .cat-header {
+            text-align: center; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px;
+        }
+        .cat-h1 { font-family: 'Oswald', sans-serif; font-size: 2.5rem; color: var(--primary); text-transform: uppercase; }
+
+        /* Product Card Layout - Flex Row */
+        .cat-item {
+            display: flex; 
+            flex-direction: row; /* Force Image Left, Text Right */
+            gap: 25px; 
+            padding: 25px 0;
+            border-bottom: 2px solid #000;
+            page-break-inside: avoid;
+        }
+        
+        /* Image Fixed Width */
+        .cat-img-wrap {
+            width: 160px; height: 160px; 
+            flex-shrink: 0; /* Don't shrink */
+            border: 1px solid #eee; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cat-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        /* Info Area */
+        .cat-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+        /* Title & Price Header */
+        .cat-top {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;
+        }
+        .cat-name {
+            font-size: 1.4rem; font-weight: 800; color: #000; 
+            text-transform: uppercase; max-width: 65%;
+        }
+        .cat-price {
+            background: #000; color: #fff; padding: 5px 15px; 
+            font-weight: 700; font-size: 1.2rem; border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        /* Specs Grid - No Overlap */
+        .cat-specs {
+            display: grid; 
+            grid-template-columns: 1fr 1fr; /* 2 Columns strict */
+            gap: 8px 20px;
+            font-size: 0.95rem; color: #333;
+        }
+        .spec-row {
+            display: flex; align-items: baseline;
+            overflow: hidden; white-space: nowrap;
+        }
+        .spec-label {
+            font-weight: 700; color: #000; 
+            min-width: 85px; /* Fixed width for label */
+            display: inline-block;
+        }
+
+        .cat-wholesale {
+            margin-top: 15px; padding: 10px; background: #f0fdf4;
+            border: 2px dashed #166534; color: #166534;
+            text-align: center; font-weight: 700;
+        }
+
+        /* Floating Buttons */
+        .fab-box {
+            position: fixed; bottom: 20px; right: 20px; display: none; gap: 10px; flex-direction: column;
+        }
+        .fab {
+            width: 50px; height: 50px; border-radius: 50%; border: none; color: white;
+            font-size: 1.2rem; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Mobile Preview Scale */
+        @media (max-width: 800px) {
+            #final-catalog {
+                transform-origin: top left;
+                transform: scale(0.45);
+                margin-bottom: -150%;
+            }
+        }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">LUMIRAMAHOME</div>
+    </div>
+
+    <div class="container">
+        <!-- EDITOR -->
+        <div id="editor">
+            <div class="card">
+                <form id="form">
+                    <span class="label">Nom du Produit</span>
+                    <input type="text" id="pName" class="input-field" placeholder="Ex: Table basse" required>
+
+                    <div class="row-2">
+                        <div>
+                            <span class="label">Forme</span>
+                            <input type="text" id="pShape" class="input-field" placeholder="Ex: Rond">
+                        </div>
+                        <div>
+                            <span class="label">Couleur</span>
+                            <input type="text" id="pColor" class="input-field" placeholder="Ex: Ral2000">
+                        </div>
+                    </div>
+                    
+                    <span class="label">Poids</span>
+                    <input type="text" id="pWeight" class="input-field" placeholder="Ex: 10 kg">
+
+                    <div class="dims-box">
+                        <span class="label" style="color:#1e40af; margin-bottom:10px;">Dimensions (cm)</span>
+                        <div class="row-2">
+                            <input type="number" id="dL" class="input-field" placeholder="Longueur">
+                            <input type="number" id="dW" class="input-field" placeholder="Largeur">
+                        </div>
+                        <div class="row-2">
+                            <input type="number" id="dH" class="input-field" placeholder="Hauteur">
+                            <input type="number" id="dD" class="input-field" placeholder="Diamètre">
+                        </div>
+                    </div>
+
+                    <div class="row-2">
+                        <div>
+                            <span class="label">Prix (DA)</span>
+                            <input type="number" id="pPrice" class="input-field" placeholder="0">
+                        </div>
+                        <div>
+                            <span class="label">Prix Gros</span>
+                            <input type="number" id="pWhole" class="input-field" placeholder="0">
+                        </div>
+                    </div>
+
+                    <div class="upload-btn" onclick="document.getElementById('pFile').click()">
+                        <i class="fas fa-camera fa-2x" style="color:#ccc"></i>
+                        <p>Ajouter une photo</p>
+                        <img id="prev" class="upload-preview">
+                        <input type="file" id="pFile" hidden accept="image/*" onchange="readImg(this)">
+                        <input type="hidden" id="pBase64">
+                    </div>
+
+                    <button type="submit" class="btn btn-add"><i class="fas fa-plus"></i> Ajouter</button>
+                    <button type="button" class="btn btn-gen" onclick="makeCat()"><i class="fas fa-print"></i> CRÉER CATALOGUE</button>
+                </form>
+            </div>
+            
+            <div style="text-align:center; color:#777; margin-bottom:20px;">
+                Produits ajoutés: <span id="count" style="font-weight:bold; color:var(--primary)">0</span>
+            </div>
+            <div id="items-list"></div>
+        </div>
+
+        <!-- CATALOG -->
+        <div id="catalog-view">
+            <div id="final-catalog">
+                <div class="cat-header">
+                    <div class="cat-h1">LUMIRAMAHOME</div>
+                    <div style="letter-spacing:2px; margin-top:5px;">CATALOGUE OFFICIEL</div>
+                    <div style="color:#666; font-size:0.9rem; margin-top:5px;" id="catDate"></div>
+                </div>
+                <div id="cat-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fab-box" id="fabs">
+        <button class="fab" style="background:#f59e0b" onclick="editMode()"><i class="fas fa-pen"></i></button>
+        <button class="fab" style="background:#ef4444" onclick="toPDF()"><i class="fas fa-file-pdf"></i></button>
+        <button class="fab" style="background:#10b981" onclick="toExcel()"><i class="fas fa-file-excel"></i></button>
+    </div>
+
+    <script>
+        let products = [];
+        // Force reset on load to prevent bad cache
+        window.onload = () => {
+            products = JSON.parse(localStorage.getItem('lumi_v6')) || [];
+            renderItems();
+            document.getElementById('catDate').innerText = new Date().toLocaleDateString('fr-FR');
+        };
+
+        function readImg(input) {
+            if(input.files[0]) {
+                const r = new FileReader();
+                r.onload = e => {
+                    document.getElementById('pBase64').value = e.target.result;
+                    document.getElementById('prev').src = e.target.result;
+                    document.getElementById('prev').style.display = 'block';
+                };
+                r.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById('form').addEventListener('submit', e => {
+            e.preventDefault();
+            products.push({
+                id: Date.now(),
+                name: document.getElementById('pName').value,
+                shape: document.getElementById('pShape').value,
+                color: document.getElementById('pColor').value,
+                weight: document.getElementById('pWeight').value,
+                l: document.getElementById('dL').value,
+                w: document.getElementById('dW').value,
+                h: document.getElementById('dH').value,
+                d: document.getElementById('dD').value,
+                price: document.getElementById('pPrice').value || "0",
+                whole: document.getElementById('pWhole').value,
+                img: document.getElementById('pBase64').value || "https://placehold.co/150?text=No+Img"
+            });
+            save(); renderItems(); reset();
+        });
+
+        function reset() {
+            document.getElementById('form').reset();
+            document.getElementById('pBase64').value = "";
+            document.getElementById('prev').style.display = "none";
+        }
+
+        function renderItems() {
+            document.getElementById('count').innerText = products.length;
+            document.getElementById('items-list').innerHTML = products.map(p => `
+                <div style="background:white; padding:10px; margin-bottom:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 4px #eee;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="${p.img}" style="width:50px; height:50px; object-fit:cover; border-radius:5px;">
+                        <div><strong>${p.name}</strong><br><small>${p.price} DA</small></div>
+                    </div>
+                    <i class="fas fa-trash" style="color:red; cursor:pointer; padding:10px;" onclick="del(${p.id})"></i>
+                </div>
+            `).join('');
+        }
+
+        function del(id) { products = products.filter(p => p.id !== id); save(); renderItems(); }
+        function save() { localStorage.setItem('lumi_v6', JSON.stringify(products)); }
+
+        function makeCat() {
+            if(!products.length) return alert("Ajoutez des produits !");
+            
+            document.getElementById('editor').style.display = 'none';
+            document.getElementById('catalog-view').style.display = 'block';
+            document.getElementById('fabs').style.display = 'flex';
+            window.scrollTo(0,0);
+
+            document.getElementById('cat-content').innerHTML = products.map(p => {
+                let specs = "";
+                // Strict Label: Value structure
+                if(p.shape) specs += `<div class="spec-row"><span class="spec-label">Forme:</span> ${p.shape}</div>`;
+                if(p.color) specs += `<div class="spec-row"><span class="spec-label">Couleur:</span> ${p.color}</div>`;
+                if(p.weight) specs += `<div class="spec-row"><span class="spec-label">Poids:</span> ${p.weight}</div>`;
+                if(p.l) specs += `<div class="spec-row"><span class="spec-label">Longueur:</span> ${p.l} cm</div>`;
+                if(p.w) specs += `<div class="spec-row"><span class="spec-label">Largeur:</span> ${p.w} cm</div>`;
+                if(p.h) specs += `<div class="spec-row"><span class="spec-label">Hauteur:</span> ${p.h} cm</div>`;
+                if(p.d) specs += `<div class="spec-row"><span class="spec-label">Diamètre:</span> ${p.d} cm</div>`;
+
+                let ws = (p.whole && p.whole != 0) ? 
+                    `<div class="cat-wholesale">PRIX GROS (10+ Pcs) : ${p.whole} DA</div>` : '';
+
+                return `
+                <div class="cat-item">
+                    <div class="cat-img-wrap">
+                        <img src="${p.img}" class="cat-img">
+                    </div>
+                    <div class="cat-info">
+                        <div class="cat-top">
+                            <div class="cat-name">${p.name}</div>
+                            <div class="cat-price">${p.price} DA</div>
+                        </div>
+                        <div class="cat-specs">${specs}</div>
+                        ${ws}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function editMode() {
+            document.getElementById('editor').style.display = 'block';
+            document.getElementById('catalog-view').style.display = 'none';
+            document.getElementById('fabs').style.display = 'none';
+        }
+
+        function toPDF() {
+            const el = document.getElementById('final-catalog');
+            // Reset mobile transform for clean print
+            el.style.transform = "none";
+            el.style.marginBottom = "0";
+            
+            const opt = {
+                margin: 0,
+                filename: 'Catalogue.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(el).save().then(() => {
+                // Restore mobile view
+                if(window.innerWidth <= 800) {
+                    el.style.transform = "scale(0.45)";
+                    el.style.marginBottom = "-150%";
+                }
+            });
+        }
+        
+        function toExcel() {
+            const data = products.map(p => ({
+                "Produit": p.name, "Prix": p.price, "Gros": p.whole,
+                "Forme": p.shape, "Couleur": p.color, "Poids": p.weight,
+                "L": p.l, "W": p.w, "H": p.h, "D": p.d
+            }));
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Cat");
+            XLSX.writeFile(wb, "Catalogue.xlsx");
+        }
+    </script>
+</body>
+</html>
