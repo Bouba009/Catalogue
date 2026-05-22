@@ -15,9 +15,6 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Swiper CSS for 3D Carousel -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    
     <!-- Quill.js WYSIWYG Editor (Rich Text) -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
@@ -55,88 +52,77 @@
             background: linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%);
             transition: background 0.3s ease;
         }
-        
-        /* Swiper 3D coverflow dimensions and styles */
-        .swiper {
+
+        /* 3D Scene Container for Rotating Table */
+        .scene3d {
+            perspective: 1200px;
             width: 100%;
-            padding-top: 50px;
-            padding-bottom: 60px;
-        }
-        .swiper-slide {
-            width: 310px;
-            height: 450px;
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
+            height: 480px;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
-        /* حاوية الصورة العائمة مع ظل سفلي قوي */
-        .slide-image-box {
+        /* The Interactive Wooden Tray container */
+        .table3d-container {
+            position: relative;
             width: 100%;
-            height: 350px;
-            border-radius: 24px;
-            overflow: hidden;
-            border: none !important;
-            background: #ffffff;
-            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15) !important;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.2, 0.85, 0.4, 1.05);
+            transform: rotateX(16deg) rotateY(0deg);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* تطبيق ظل سفلي واقعي على الصور الشفافة والعادية */
-        .img-shadow {
-            filter: drop-shadow(0 15px 12px rgba(0, 0, 0, 0.18)) drop-shadow(0 4px 4px rgba(0, 0, 0, 0.08)) !important;
+        /* Wooden Table Base styling mimicking the image tray */
+        .wooden-table {
+            position: absolute;
+            width: 580px;
+            height: 580px;
+            background: radial-gradient(circle, #ecdcc8 10%, #cca37b 80%, #a4764b 100%);
+            border-radius: 50%;
+            transform: rotateX(90deg) translateZ(-60px);
+            box-shadow: 
+                0px 1px 0px #bca085,
+                0px 3px 0px #a88c72,
+                0px 5px 0px #977b62,
+                0px 7px 0px #866b53,
+                0px 9px 0px #765a44,
+                0px 11px 0px #674c37,
+                0px 13px 0px #583f2c,
+                0px 15px 0px #4b3422,
+                0px 25px 45px rgba(0, 0, 0, 0.35);
+            border: 14px solid #ecdcc8;
         }
 
-        /* حاوية العنوان العائم مع تأثير التلاشي والحركة */
-        .slide-title-box {
-            width: 100%;
-            padding-top: 15px;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(15px);
+        /* 3D Product Card styling */
+        .product-3d-card {
+            position: absolute;
+            width: 150px;
+            height: 280px;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            cursor: pointer;
         }
 
-        /* تصميم العنوان: خلفية خضراء فاتحة، كتابة بيضاء، وظلال متناسقة */
-        .slide-title {
-            background-color: #4ade80; /* أخضر فاتح ممتاز للرؤية */
-            color: #ffffff !important;
-            font-weight: 800;
-            font-size: 1.1rem;
-            padding: 6px 18px;
-            border-radius: 9999px;
-            display: inline-block;
-            box-shadow: 0 8px 16px -4px rgba(74, 222, 128, 0.4);
-            max-width: 90%;
-            transition: all 0.4s ease;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        /* إظهار الكتابة فقط للمنتج الذي في الواجهة النشطة */
-        .swiper-slide-active .slide-title-box {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(-15px);
-        }
-
-        /* حركة طفو إضافية للبطاقة النشطة في المنتصف مع وهج ظل ناعم */
-        .swiper-slide-active .slide-image-box {
-            transform: translateY(-25px) scale(1.03);
-            box-shadow: 0 30px 60px -15px rgba(34, 197, 94, 0.25), 0 10px 20px -10px rgba(34, 197, 94, 0.15) !important;
-        }
-
-        /* تأثير الطفو عند تمرير الماوس */
-        .swiper-slide:hover .slide-image-box {
-            transform: translateY(-15px);
-            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2) !important;
+        /* Natural contact shadow on the wooden board under each product */
+        .shadow-ellipsoid {
+            position: absolute;
+            width: 110px;
+            height: 35px;
+            background: rgba(0, 0, 0, 0.22);
+            filter: blur(8px);
+            border-radius: 50%;
+            bottom: 0px;
+            transform: rotateX(90deg) translateZ(-59px);
+            transition: all 0.5s ease;
         }
 
         /* Custom styles to render Quill's HTML output inside Product Detail */
@@ -178,6 +164,7 @@
             margin: 1rem 0;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
+        /* Quill custom styling modifications */
         .ql-editor {
             font-family: 'Cairo', sans-serif;
             min-height: 160px;
@@ -195,7 +182,7 @@
     <!-- Main Content -->
     <main class="flex-grow">
         
-        <!-- SECTION 1: HOME (3D CAROUSEL) -->
+        <!-- SECTION 1: HOME (3D ROTATING TABLE) -->
         <section id="sec-home" class="view-section py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mt-6 mb-10">
                 <h1 id="home-title" class="text-5xl sm:text-6xl font-black tracking-tight">
@@ -205,15 +192,30 @@
                 <div class="h-1 w-20 bg-brand-500 mx-auto mt-6 rounded-full"></div>
             </div>
 
-            <!-- Swiper 3D Coverflow Container -->
-            <div class="w-full relative py-2">
-                <div class="swiper mySwiper">
-                    <div class="swiper-wrapper" id="carouselWrapper">
-                        <!-- Dynamic items will load here -->
+            <!-- 3D Table Carousel Showcase -->
+            <div class="w-full relative py-12 flex flex-col items-center">
+                
+                <!-- Left and Right Floating Arrows -->
+                <button onclick="rotateTable('prev')" class="absolute left-4 md:left-12 top-1/2 -translate-y-1/2 z-30 bg-white/90 backdrop-blur-md hover:bg-brand-500 hover:text-white text-slate-700 w-12 h-12 rounded-full border border-slate-200/80 shadow-md flex items-center justify-center transition-all duration-300">
+                    <i class="fa-solid fa-chevron-left text-lg"></i>
+                </button>
+                <button onclick="rotateTable('next')" class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 z-30 bg-white/90 backdrop-blur-md hover:bg-brand-500 hover:text-white text-slate-700 w-12 h-12 rounded-full border border-slate-200/80 shadow-md flex items-center justify-center transition-all duration-300">
+                    <i class="fa-solid fa-chevron-right text-lg"></i>
+                </button>
+
+                <!-- 3D Scene Viewport -->
+                <div class="scene3d w-full max-w-[800px] h-[500px]">
+                    <div id="table3d" class="table3d-container">
+                        <!-- Simulated Wooden Plate -->
+                        <div class="wooden-table"></div>
+                        
+                        <!-- Products loaded here dynamically -->
+                        <div id="tableItems" class="absolute inset-0 flex items-center justify-center" style="transform-style: preserve-3d;"></div>
                     </div>
-                    <!-- Swiper Pagination -->
-                    <div class="swiper-pagination !bottom-0"></div>
                 </div>
+
+                <!-- Pagination dots -->
+                <div id="tablePagination" class="flex gap-2.5 mt-6 z-20"></div>
             </div>
         </section>
 
@@ -228,8 +230,8 @@
             <div class="bg-white rounded-3xl shadow-xl shadow-slate-100 overflow-hidden border border-slate-100 grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 sm:p-10">
                 <!-- Image Section (Left/Top) -->
                 <div class="lg:col-span-5 space-y-4">
-                    <div class="aspect-[4/3] w-full rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 relative shadow-lg">
-                        <img id="detailMainImg" src="" alt="Product Detail" class="w-full h-full object-cover transition-opacity duration-300 img-shadow" onerror="handleImageError(this)">
+                    <div class="aspect-[4/3] w-full rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 relative">
+                        <img id="detailMainImg" src="" alt="Product Detail" class="w-full h-full object-cover transition-opacity duration-300" onerror="handleImageError(this)">
                     </div>
                     <!-- Gallery Images Grid -->
                     <div class="grid grid-cols-4 gap-3" id="detailGallery">
@@ -458,7 +460,7 @@
                             <label class="block text-xs font-bold text-slate-500 mb-2">صورة غلاف البوكس *</label>
                             <input type="file" id="formCover" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer">
                             <div id="previewCoverWrapper" class="mt-2 h-16 w-16 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 hidden">
-                                <img id="previewCover" src="" class="w-full h-full object-cover img-shadow" onerror="handleImageError(this)">
+                                <img id="previewCover" src="" class="w-full h-full object-cover" onerror="handleImageError(this)">
                             </div>
                         </div>
                         <!-- Gallery Files -->
@@ -486,8 +488,7 @@
         </div>
     </footer>
 
-    <!-- Swiper JS & Application Logic -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- Application Logic and 3D Rendering -->
     <script>
         // Dictionary for translation mapping
         const translations = {
@@ -575,7 +576,6 @@
                 <li>هيكل مصنوع من الكرتون السويدي المقوى مزدوج الحماية.</li>
                 <li>مغطى بـ <strong>المخمل السويسري الطبيعي</strong> فائق النعومة.</li>
             </ul>
-            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
         `;
         const sampleFr1 = `
             <p style="color: #16a34a;"><strong>Le Coffret Royal Vert Tirourda est un chef-d'œuvre pour le conditionnement de cadeaux raffinés.</strong></p>
@@ -584,7 +584,6 @@
                 <li>Structure en carton suédois renforcé double protection.</li>
                 <li>Revêtement en <strong>velours naturel suisse</strong> de haute douceur.</li>
             </ul>
-            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
         `;
 
         const sampleAr2 = `<p>تصميم مبتكر يتيح إغلاقاً مغناطيسياً سلساً ومميزاً للعلبة بلمسة واحدة.</p><h2>المميزات الرئيسية:</h2><ul><li>سماكة جدارية فائقة للحماية الكاملة.</li><li>مثالية تماماً لتعليب العطور والمجوهرات.</li></ul>`;
@@ -596,64 +595,53 @@
         const sampleAr4 = `<p>علبة الياسمين الفاخرة المخصصة للأعراس والمناسبات العائلية الكبرى.</p><h2>المميزات:</h2><ul><li>شريط حريري ناعم مدمج بالإغلاق.</li><li>لمسة ذهبية لماعة على الحواف.</li></ul>`;
         const sampleFr4 = `<p>Boîte Jasmin élégante conçue spécialement pour les mariages et grandes réceptions.</p><h2>Détails :</h2><ul><li>Ruban en soie douce intégré.</li><li>Finition dorée brillante sur les bordures.</li></ul>`;
 
-        // 4 High Quality Initial Data Bilingual
+        // Mock Datasets with Direct transparent Background Images
         const initialProducts = [
             {
                 id: "1",
-                name_ar: "صندوق تيروردا الملكي الأخضر",
-                name_fr: "Coffret Royal Vert Tirourda",
-                price: "5900",
+                name_ar: "غسول وجه تيروردا الطبيعي",
+                name_fr: "Gel Nettoyant Visage Tirourda",
+                price: "2400",
                 desc_ar: sampleAr1,
                 desc_fr: sampleFr1,
-                cover: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
-                    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80"
-                ],
-                pdf_ar: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg==",
-                pdf_fr: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg=="
+                cover: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=400&q=80",
+                gallery: ["https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=400&q=80"],
+                pdf_ar: "",
+                pdf_fr: ""
             },
             {
                 id: "2",
-                name_ar: "علبة تيروردا السداسية البيضاء",
-                name_fr: "Boîte Hexagonale Blanche Tirourda",
-                price: "3400",
+                name_ar: "زيت الأركان النقي 100%",
+                name_fr: "Huile d'Argan Pure 100%",
+                price: "3900",
                 desc_ar: sampleAr2,
                 desc_fr: sampleFr2,
-                cover: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80",
-                    "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80"
-                ],
+                cover: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=400&q=80",
+                gallery: ["https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=400&q=80"],
                 pdf_ar: "",
                 pdf_fr: ""
             },
             {
                 id: "3",
-                name_ar: "صندوق كرافت للحفاظ على البيئة",
-                name_fr: "Boîte Kraft Écoresponsable",
-                price: "1900",
+                name_ar: "صابون زيت الزيتون الفاخر",
+                name_fr: "Savon d'Olive Extra-Doux",
+                price: "1200",
                 desc_ar: sampleAr3,
                 desc_fr: sampleFr3,
-                cover: "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80"
-                ],
+                cover: "https://images.unsplash.com/photo-1607006342411-913a5d8f2b31?auto=format&fit=crop&w=400&q=80",
+                gallery: ["https://images.unsplash.com/photo-1607006342411-913a5d8f2b31?auto=format&fit=crop&w=400&q=80"],
                 pdf_ar: "",
                 pdf_fr: ""
             },
             {
                 id: "4",
-                name_ar: "علبة الياسمين الفاخرة",
-                name_fr: "Coffret Jasmin Élégant",
-                price: "4200",
+                name_ar: "ماء الورد الطبيعي المنعش",
+                name_fr: "Eau de Rose Rafraîchissante",
+                price: "1800",
                 desc_ar: sampleAr4,
                 desc_fr: sampleFr4,
-                cover: "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
-                    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80"
-                ],
+                cover: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80",
+                gallery: ["https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80"],
                 pdf_ar: "",
                 pdf_fr: ""
             }
@@ -663,7 +651,11 @@
         let products = JSON.parse(localStorage.getItem('tirourda_perf_data')) || initialProducts;
         let isAuth = sessionStorage.getItem('tirourda_perf_auth') === 'true';
         let currentLang = localStorage.getItem('tirourda_lang') || 'ar';
-        let swiperInstance = null;
+        
+        // 3D Table State variables
+        let currentRotation = 0;
+        let activeIndex = 0;
+
         let quillAr = null;
         let quillFr = null;
 
@@ -738,8 +730,6 @@
             if (currentLang === 'ar') {
                 document.getElementById('lang-btn-ar').className = "px-3.5 py-1.5 rounded-full text-xs font-black bg-brand-500 text-white shadow-sm";
                 document.getElementById('lang-btn-fr').className = "px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:text-slate-800";
-                
-                // Color formatting: Tirourda in green, Catalogue in black (Arabic text flow)
                 document.getElementById('home-title').innerHTML = `<span class="text-slate-900">كتالوج</span> <span class="text-brand-500">تيروردا</span>`;
                 
                 document.body.classList.add('rtl');
@@ -747,8 +737,6 @@
             } else {
                 document.getElementById('lang-btn-fr').className = "px-3.5 py-1.5 rounded-full text-xs font-black bg-brand-500 text-white shadow-sm";
                 document.getElementById('lang-btn-ar').className = "px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:text-slate-800";
-                
-                // Color formatting: Tirourda in green, Catalogue in black (French text flow)
                 document.getElementById('home-title').innerHTML = `<span class="text-slate-900">Catalogue</span> <span class="text-brand-500">Tirourda</span>`;
                 
                 document.body.classList.add('ltr');
@@ -779,7 +767,7 @@
                 showProductDetails(prodId);
             } else {
                 showSection('home');
-                initCarousel();
+                init3DTable();
             }
         }
 
@@ -791,59 +779,142 @@
             if (sectionName === 'admin') document.getElementById('sec-admin').classList.remove('hidden');
         }
 
-        // 3D Infinite Circular Coverflow Swiper implementation (Centered Slides, loop flanked correctly)
-        function initCarousel() {
-            const wrapper = document.getElementById('carouselWrapper');
-            wrapper.innerHTML = '';
+        /* --- 3D Carousel Implementation (Circular Rotating Table) --- */
+        function init3DTable() {
+            const container = document.getElementById('tableItems');
+            const pagination = document.getElementById('tablePagination');
+            if (!container) return;
+
+            container.innerHTML = '';
+            pagination.innerHTML = '';
 
             if (products.length === 0) {
-                wrapper.innerHTML = `<div class="text-slate-400 text-center w-full py-12 font-bold" data-i18n="noProducts">${translations[currentLang].noProducts}</div>`;
+                container.innerHTML = `<div class="text-slate-400 text-center w-full py-12 font-bold" data-i18n="noProducts">${translations[currentLang].noProducts}</div>`;
                 return;
             }
 
-            products.forEach(prod => {
+            const angleStep = 360 / products.length;
+
+            products.forEach((prod, idx) => {
                 const titleText = currentLang === 'ar' ? prod.name_ar : prod.name_fr;
 
-                const slide = document.createElement('div');
-                slide.className = 'swiper-slide relative cursor-pointer';
-                slide.setAttribute('onclick', `window.location.hash = '#product-${prod.id}'`);
-                slide.innerHTML = `
-                    <div class="slide-image-box">
-                        <img src="${prod.cover}" alt="${titleText}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105 img-shadow" onerror="handleImageError(this)">
+                // Create the product as a 3D standing card on the table
+                const card = document.createElement('div');
+                card.className = 'product-3d-card';
+                card.id = `card-3d-${idx}`;
+                card.setAttribute('onclick', `handleCardClick(${idx}, '${prod.id}')`);
+
+                card.innerHTML = `
+                    <!-- Ground shadow under each bottle -->
+                    <div class="shadow-ellipsoid"></div>
+                    
+                    <!-- Standing bottle container -->
+                    <div class="prod-img-3d-wrap w-[120px] h-[210px] flex items-end justify-center z-10 select-none pointer-events-none">
+                        <img src="${prod.cover}" alt="${titleText}" class="prod-img-3d max-w-full max-h-full object-contain transition-all duration-500 ease-out" onerror="handleImageError(this)">
                     </div>
-                    <div class="slide-title-box">
-                        <h3 class="slide-title truncate">${titleText}</h3>
+                    
+                    <!-- Title label tag underneath -->
+                    <div class="prod-label-3d mt-4 bg-white/95 backdrop-blur-sm border border-slate-200/50 px-3 py-1.5 rounded-xl shadow-md text-center max-w-[140px] z-20 select-none pointer-events-none transition-all duration-500">
+                        <p class="text-xs font-black text-brand-700 truncate">${titleText}</p>
+                        <p class="text-[10px] font-bold text-slate-500 mt-0.5">${Number(prod.price).toLocaleString()} ${translations[currentLang].currency}</p>
                     </div>
                 `;
-                wrapper.appendChild(slide);
+                container.appendChild(card);
+
+                // Build modern pagination pills
+                const dot = document.createElement('button');
+                dot.setAttribute('onclick', `jumpToCard(${idx})`);
+                pagination.appendChild(dot);
             });
 
-            if (swiperInstance) swiperInstance.destroy(true, true);
+            updateTableTransforms();
+        }
 
-            // Reconstruct Swiper loop
-            swiperInstance = new Swiper('.mySwiper', {
-                effect: 'coverflow',
-                grabCursor: true,
-                centeredSlides: true,
-                slidesPerView: 'auto',
-                observer: true,
-                observeParents: true,
-                loop: products.length >= 3, 
-                initialSlide: 0,
-                coverflowEffect: {
-                    rotate: 15,
-                    stretch: 0,
-                    depth: 100,
-                    modifier: 1,
-                    slideShadows: false,
-                },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-                autoplay: {
-                    delay: 4500,
-                    disableOnInteraction: false,
+        function handleCardClick(idx, prodId) {
+            if (idx === activeIndex) {
+                window.location.hash = `#product-${prodId}`;
+            } else {
+                jumpToCard(idx);
+            }
+        }
+
+        function jumpToCard(idx) {
+            const angleStep = 360 / products.length;
+            let diff = idx - activeIndex;
+
+            // Shortest path circular math
+            const half = products.length / 2;
+            if (diff > half) diff -= products.length;
+            else if (diff < -half) diff += products.length;
+
+            currentRotation -= diff * angleStep;
+            activeIndex = idx;
+            updateTableTransforms();
+        }
+
+        function rotateTable(direction) {
+            if (products.length === 0) return;
+            const angleStep = 360 / products.length;
+            if (direction === 'next') {
+                currentRotation -= angleStep;
+                activeIndex = (activeIndex + 1) % products.length;
+            } else {
+                currentRotation += angleStep;
+                activeIndex = (activeIndex - 1 + products.length) % products.length;
+            }
+            updateTableTransforms();
+        }
+
+        // Apply 3D perspective, spacing radius and counter-rotations
+        function updateTableTransforms() {
+            const table = document.getElementById('table3d');
+            if (!table) return;
+
+            // Pitch 16 degrees back, rotate Yaw
+            table.style.transform = `rotateX(16deg) rotateY(${currentRotation}deg)`;
+
+            const angleStep = 360 / products.length;
+            const cards = document.querySelectorAll('.product-3d-card');
+
+            cards.forEach((card, idx) => {
+                const initialAngle = idx * angleStep;
+                const counterAngle = -(initialAngle + currentRotation);
+                const radius = 210; // placement distance from table center
+
+                // Position on edge, reset face to camera, stand vertical (rotateX counter-pitch)
+                card.style.transform = `rotateY(${initialAngle}deg) translateZ(${radius}px) rotateY(${counterAngle}deg) rotateX(-16deg)`;
+
+                const img = card.querySelector('.prod-img-3d');
+                const label = card.querySelector('.prod-label-3d');
+                const shadow = card.querySelector('.shadow-ellipsoid');
+
+                // Active card scaling and lighting/shadow elevations
+                if (idx === activeIndex) {
+                    card.classList.add('active-card');
+                    img.style.transform = 'scale(1.2) translateY(-25px)';
+                    img.style.filter = 'drop-shadow(0 20px 25px rgba(0,0,0,0.3))';
+                    label.style.transform = 'scale(1.1) translateY(-10px)';
+                    label.style.opacity = '1';
+                    shadow.style.transform = 'rotateX(90deg) translateZ(-59px) scale(1.35)';
+                    shadow.style.opacity = '1';
+                } else {
+                    card.classList.remove('active-card');
+                    img.style.transform = 'scale(0.9) translateY(0px)';
+                    img.style.filter = 'drop-shadow(0 8px 12px rgba(0,0,0,0.15))';
+                    label.style.transform = 'scale(0.9) translateY(0px)';
+                    label.style.opacity = '0.75';
+                    shadow.style.transform = 'rotateX(90deg) translateZ(-59px) scale(0.9)';
+                    shadow.style.opacity = '0.6';
+                }
+            });
+
+            // Refresh active pagination pill shape
+            const dots = document.querySelectorAll('#tablePagination button');
+            dots.forEach((dot, idx) => {
+                if (idx === activeIndex) {
+                    dot.className = "w-6 h-2.5 rounded-full bg-brand-600 transition-all duration-300";
+                } else {
+                    dot.className = "w-2.5 h-2.5 rounded-full bg-slate-300 hover:bg-slate-400 transition-all duration-300";
                 }
             });
         }
@@ -874,8 +945,8 @@
             
             listImages.forEach((img, idx) => {
                 const button = document.createElement('button');
-                button.className = `aspect-square rounded-xl overflow-hidden bg-slate-50 border ${idx === 0 ? 'border-brand-500 ring-2 ring-brand-500/20' : 'border-slate-200'} transition-all shadow-sm`;
-                button.innerHTML = `<img src="${img}" class="w-full h-full object-cover img-shadow" onerror="handleImageError(this)">`;
+                button.className = `aspect-square rounded-xl overflow-hidden bg-slate-50 border ${idx === 0 ? 'border-brand-500 ring-2 ring-brand-500/20' : 'border-slate-200'} transition-all`;
+                button.innerHTML = `<img src="${img}" class="w-full h-full object-cover" onerror="handleImageError(this)">`;
                 button.onclick = () => {
                     document.querySelectorAll('#detailGallery button').forEach(btn => btn.classList.remove('border-brand-500', 'ring-2', 'ring-brand-500/20'));
                     button.classList.add('border-brand-500', 'ring-2', 'ring-brand-500/20');
@@ -975,7 +1046,7 @@
                 tr.className = 'hover:bg-slate-50/50 transition-colors';
                 tr.innerHTML = `
                     <td class="px-6 py-4">
-                        <img src="${prod.cover}" class="w-12 h-12 object-cover rounded-xl border border-slate-100 shadow-md img-shadow" onerror="handleImageError(this)">
+                        <img src="${prod.cover}" class="w-12 h-12 object-cover rounded-xl border border-slate-100 shadow-sm" onerror="handleImageError(this)">
                     </td>
                     <td class="px-6 py-4 font-extrabold text-slate-800">${displayName}</td>
                     <td class="px-6 py-4 font-black text-brand-600">${prod.price} ${translations[currentLang].currency}</td>
@@ -998,7 +1069,7 @@
             });
         }
 
-        /* --- Canvas Compression System with PNG support to keep transparency --- */
+        /* --- Canvas Compression System & Base64 Converters --- */
         function compressImage(file, maxDim = 500) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1026,12 +1097,8 @@
                         canvas.width = w;
                         canvas.height = h;
                         const ctx = canvas.getContext('2d');
-                        
-                        // Drawing transparently directly. PNG preserves transparency without adding a black background.
                         ctx.drawImage(img, 0, 0, w, h);
-                        
-                        // Convert to image/png to keep base64 alpha channel transparency intact
-                        resolve(canvas.toDataURL('image/png'));
+                        resolve(canvas.toDataURL('image/jpeg', 0.8));
                     };
                     img.onerror = reject;
                 };
@@ -1076,7 +1143,7 @@
                         
                         const img = document.createElement('img');
                         img.src = b64;
-                        img.className = 'w-12 h-12 object-cover rounded-xl border border-slate-200 img-shadow';
+                        img.className = 'w-12 h-12 object-cover rounded-xl border border-slate-200';
                         wrapper.appendChild(img);
                     } catch (err) {
                         console.error('Gallery file processing error', err);
@@ -1221,7 +1288,7 @@
                 prod.gallery.forEach(img => {
                     const el = document.createElement('img');
                     el.src = img;
-                    el.className = 'w-12 h-12 object-cover rounded-xl border border-slate-200 img-shadow';
+                    el.className = 'w-12 h-12 object-cover rounded-xl border border-slate-200';
                     gallWrapper.appendChild(el);
                 });
             }
@@ -1234,10 +1301,10 @@
             }
         }
 
-        // Error handling fallback for image load fails
+        // Fallback placeholder image on loading error
         function handleImageError(image) {
             image.onerror = null;
-            image.src = "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80";
+            image.src = "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=400&q=80";
         }
 
         function deleteProduct(id) {
