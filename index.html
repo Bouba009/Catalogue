@@ -52,6 +52,7 @@
         body {
             font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%);
+            transition: background 0.3s ease;
         }
         /* Swiper 3D coverflow dimensions and styles */
         .swiper {
@@ -85,12 +86,12 @@
         }
         .rich-content ul {
             list-style-type: disc;
-            margin-right: 1.5rem;
+            margin-inline-start: 1.5rem;
             margin-bottom: 1rem;
         }
         .rich-content ol {
             list-style-type: decimal;
-            margin-right: 1.5rem;
+            margin-inline-start: 1.5rem;
             margin-bottom: 1rem;
         }
         .rich-content img {
@@ -107,25 +108,29 @@
             margin: 1rem 0;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
-        /* Quill custom styling modifications for RTL scroll */
+        /* Quill custom styling modifications */
         .ql-editor {
-            text-align: right;
-            direction: rtl;
             font-family: 'Cairo', sans-serif;
-            min-height: 200px;
+            min-height: 160px;
         }
     </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <!-- Main Content Grid -->
+    <!-- Floating Language Switcher -->
+    <div class="fixed top-6 left-6 z-50 flex gap-1 bg-white p-1 rounded-full border border-slate-200/80 shadow-md">
+        <button onclick="changeLanguage('ar')" id="lang-btn-ar" class="px-3.5 py-1.5 rounded-full text-xs font-black transition-all">العربية</button>
+        <button onclick="changeLanguage('fr')" id="lang-btn-fr" class="px-3.5 py-1.5 rounded-full text-xs font-black transition-all">Français</button>
+    </div>
+
+    <!-- Main Content -->
     <main class="flex-grow">
         
         <!-- SECTION 1: HOME (3D CAROUSEL) -->
         <section id="sec-home" class="view-section py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mt-6 mb-10">
-                <h1 class="text-5xl sm:text-6xl font-black text-slate-900 tracking-tight">كتالوج تيروردا</h1>
-                <p class="text-brand-600 font-extrabold text-sm sm:text-base mt-2 tracking-widest uppercase">التعبئة والتغليف العصري والفاخر</p>
+                <h1 id="home-title" class="text-5xl sm:text-6xl font-black text-slate-900 tracking-tight" data-i18n="title">كتالوج تيروردا</h1>
+                <p id="home-subtitle" class="text-brand-600 font-extrabold text-sm sm:text-base mt-2 tracking-widest uppercase" data-i18n="subtitle">التعبئة والتغليف العصري والفاخر</p>
                 <div class="h-1 w-20 bg-brand-500 mx-auto mt-6 rounded-full"></div>
             </div>
 
@@ -145,8 +150,8 @@
         <section id="sec-detail" class="view-section py-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
             <!-- Back to Home Button -->
             <button onclick="window.location.hash = ''; return false;" class="mb-8 inline-flex items-center gap-2 text-slate-500 hover:text-brand-600 font-bold transition-colors">
-                <i class="fa-solid fa-arrow-right"></i>
-                العودة للكتالوج الرئيسي
+                <i class="fa-solid fa-arrow-right self-center rotate-on-ltr"></i>
+                <span data-i18n="backToCatalog">العودة للكتالوج الرئيسي</span>
             </button>
 
             <div class="bg-white rounded-3xl shadow-xl shadow-slate-100 overflow-hidden border border-slate-100 grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 sm:p-10">
@@ -164,21 +169,21 @@
                 <!-- Info Section (Right/Bottom) -->
                 <div class="lg:col-span-7 flex flex-col justify-between py-2">
                     <div>
-                        <span class="bg-brand-50 text-brand-700 border border-brand-200/50 px-3 py-1 rounded-lg text-xs font-bold inline-block">تيروردا للتغليف</span>
+                        <span class="bg-brand-50 text-brand-700 border border-brand-200/50 px-3 py-1 rounded-lg text-xs font-bold inline-block">Tirourda Premium</span>
                         <h2 class="text-3xl font-black text-slate-900 mt-4 leading-tight" id="detailTitle">اسم المنتج</h2>
                         
                         <div class="flex items-baseline gap-2 mt-4 bg-brand-50/50 border border-brand-100/30 p-3 rounded-2xl w-fit">
-                            <span class="text-sm font-semibold text-slate-400">السعر:</span>
+                            <span class="text-sm font-semibold text-slate-400" data-i18n="thPrice">السعر:</span>
                             <span class="text-3xl font-black text-brand-600" id="detailPrice">0.00</span>
-                            <span class="text-sm font-bold text-slate-500">د.ج</span>
+                            <span class="text-sm font-bold text-slate-500" data-i18n="currency">د.ج</span>
                         </div>
                         
                         <div class="border-t border-slate-100 my-6"></div>
-                        <h4 class="font-bold text-slate-900 mb-4 text-lg border-r-4 border-brand-500 pr-3">المواصفات والتفاصيل الكاملة:</h4>
+                        <h4 class="font-bold text-slate-900 mb-4 text-lg border-r-4 border-brand-500 pr-3 rtl:border-r-4 rtl:border-l-0 ltr:border-l-4 ltr:border-r-0 ltr:pl-3 ltr:pr-0" data-i18n="specsHeader">المواصفات والتفاصيل الكاملة:</h4>
                         
                         <!-- Rich HTML Content Viewport -->
                         <div class="rich-content" id="detailDesc">
-                            <!-- Populated dynamically via innerHTML with custom formatting (colors, bold, images, videos) -->
+                            <!-- Populated dynamically -->
                         </div>
                     </div>
 
@@ -186,7 +191,7 @@
                     <div class="mt-8 pt-6 border-t border-slate-100">
                         <a id="detailPdfBtn" href="#" download class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-brand-500/20 text-center flex items-center justify-center gap-3 transition-all duration-300">
                             <i class="fa-solid fa-file-pdf text-xl"></i>
-                            تحميل دليل الاستعمال الشامل (PDF)
+                            <span data-i18n="downloadPdf">تحميل دليل الاستعمال الشامل (PDF)</span>
                         </a>
                     </div>
                 </div>
@@ -199,19 +204,19 @@
                 <div class="bg-brand-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 text-brand-600">
                     <i class="fa-solid fa-lock-open text-2xl"></i>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-900 text-center mb-1">تسجيل دخول الإدارة</h2>
-                <p class="text-xs text-slate-400 text-center mb-6">يرجى تسجيل الدخول للوصول إلى لوحة التحكم</p>
+                <h2 class="text-2xl font-bold text-slate-900 text-center mb-1" data-i18n="adminLoginTitle">تسجيل دخول الإدارة</h2>
+                <p class="text-xs text-slate-400 text-center mb-6" data-i18n="adminLoginSub">يرجى تسجيل الدخول للوصول إلى لوحة التحكم</p>
 
                 <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-2 mr-1">اسم المستخدم</label>
-                        <input type="text" id="loginUser" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all" placeholder="admin09">
+                        <label class="block text-xs font-bold text-slate-500 mb-2 mr-1" data-i18n="username">اسم المستخدم</label>
+                        <input type="text" id="loginUser" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all text-sm" placeholder="admin09">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-2 mr-1">كلمة المرور</label>
-                        <input type="password" id="loginPass" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all" placeholder="••••••••">
+                        <label class="block text-xs font-bold text-slate-500 mb-2 mr-1" data-i18n="password">كلمة المرور</label>
+                        <input type="password" id="loginPass" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition-all text-sm" placeholder="••••••••">
                     </div>
-                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-xl shadow-md transition-all">دخول</button>
+                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-xl shadow-md transition-all text-sm" data-i18n="loginBtn">دخول</button>
                 </form>
             </div>
         </section>
@@ -220,12 +225,12 @@
         <section id="sec-admin" class="view-section py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                 <div>
-                    <h1 class="text-3xl font-extrabold text-slate-900">لوحة التحكم الاحترافية</h1>
-                    <p class="text-slate-500 mt-1">تعديل وإضافة منتجات الكتالوج ومتابعة إحصائيات النظام اليومية.</p>
+                    <h1 class="text-3xl font-extrabold text-slate-900" data-i18n="adminTitle">لوحة التحكم الاحترافية</h1>
+                    <p class="text-slate-500 mt-1" data-i18n="adminSub">تعديل وإضافة منتجات الكتالوج ومتابعة إحصائيات النظام اليومية.</p>
                 </div>
                 <button onclick="handleLogout()" class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 self-start">
                     <i class="fa-solid fa-right-from-bracket"></i>
-                    تسجيل الخروج
+                    <span data-i18n="logout">تسجيل الخروج</span>
                 </button>
             </div>
 
@@ -236,7 +241,7 @@
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
                     <div>
-                        <span class="text-xs font-bold text-slate-400 block">زيارات اليوم</span>
+                        <span class="text-xs font-bold text-slate-400 block" data-i18n="statVisitsDay">زيارات اليوم</span>
                         <span class="text-2xl font-black text-slate-800 block mt-1">1,482</span>
                     </div>
                 </div>
@@ -245,7 +250,7 @@
                         <i class="fa-solid fa-calendar-check"></i>
                     </div>
                     <div>
-                        <span class="text-xs font-bold text-slate-400 block">زيارات الشهر الحالي</span>
+                        <span class="text-xs font-bold text-slate-400 block" data-i18n="statVisitsMonth">زيارات الشهر الحالي</span>
                         <span class="text-2xl font-black text-slate-800 block mt-1">45,190</span>
                     </div>
                 </div>
@@ -254,7 +259,7 @@
                         <i class="fa-solid fa-boxes-packing"></i>
                     </div>
                     <div>
-                        <span class="text-xs font-bold text-slate-400 block">المنتجات النشطة</span>
+                        <span class="text-xs font-bold text-slate-400 block" data-i18n="statActiveProducts">المنتجات النشطة</span>
                         <span class="text-2xl font-black text-slate-800 block mt-1" id="statProductsCount">0</span>
                     </div>
                 </div>
@@ -264,21 +269,21 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
                 <!-- Visitory Chart -->
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 lg:col-span-2">
-                    <h3 class="text-lg font-bold text-slate-900 mb-4">نشاط الزوار الأسبوعي</h3>
+                    <h3 class="text-lg font-bold text-slate-900 mb-4" data-i18n="weeklyActivity">نشاط الزوار الأسبوعي</h3>
                     <div class="h-64">
                         <canvas id="dashboardChart"></canvas>
                     </div>
                 </div>
 
                 <!-- Create Trigger -->
-                <div class="bg-gradient-to-br from-brand-500 to-emerald-700 text-white p-6 rounded-3xl shadow-lg flex flex-col justify-between">
+                <div class="bg-gradient-to-br from-brand-500 to-emerald-700 text-white p-6 rounded-3xl shadow-lg flex flex-col justify-between animate-pulse-slow">
                     <div>
-                        <span class="bg-white/20 text-white px-3 py-1 rounded-lg text-[10px] font-bold uppercase">العمليات السريعة</span>
-                        <h3 class="text-xl font-bold mt-3 mb-2">إضافة بوكس / منتج جديد</h3>
-                        <p class="text-brand-100 text-xs leading-relaxed">أدخل مواصفات المنتج الجديد، ارفع الصور، وحدد ملف دليل الاستعمال بصيغة PDF فوراً مع محتوى وصفي منسق.</p>
+                        <span class="bg-white/20 text-white px-3 py-1 rounded-lg text-[10px] font-bold uppercase" data-i18n="quickOperations">العمليات السريعة</span>
+                        <h3 class="text-xl font-bold mt-3 mb-2" data-i18n="addBoxTitle">إضافة بوكس / منتج جديد</h3>
+                        <p class="text-brand-100 text-xs leading-relaxed" data-i18n="addBoxSub">أدخل مواصفات المنتج الجديد باللغتين، ارفع الصور، وحدد ملف دليل الاستعمال.</p>
                     </div>
-                    <button onclick="openProductModal()" class="w-full bg-white text-brand-700 hover:bg-brand-50 font-bold py-3.5 rounded-xl shadow-md transition-all mt-6">
-                        <i class="fa-solid fa-plus ml-2"></i> إضافة منتج جديد
+                    <button onclick="openProductModal()" class="w-full bg-white text-brand-700 hover:bg-brand-50 font-bold py-3.5 rounded-xl shadow-md transition-all mt-6" data-i18n="addProductBtn">
+                        إضافة منتج جديد
                     </button>
                 </div>
             </div>
@@ -286,18 +291,18 @@
             <!-- Products Table List -->
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="px-6 py-5 border-b border-slate-100">
-                    <h3 class="text-lg font-bold text-slate-900">قائمة الصناديق المتوفرة</h3>
+                    <h3 class="text-lg font-bold text-slate-900" data-i18n="listTitle">قائمة الصناديق المتوفرة</h3>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-right">
+                    <table class="w-full text-right ltr:text-left">
                         <thead class="bg-slate-50 text-slate-500 text-xs font-bold">
                             <tr>
-                                <th class="px-6 py-4">صورة الغلاف</th>
-                                <th class="px-6 py-4">الاسم</th>
-                                <th class="px-6 py-4">السعر</th>
-                                <th class="px-6 py-4">الصور الفرعية</th>
-                                <th class="px-6 py-4">دليل الاستعمال</th>
-                                <th class="px-6 py-4 text-center">العمليات</th>
+                                <th class="px-6 py-4" data-i18n="thCover">صورة الغلاف</th>
+                                <th class="px-6 py-4" data-i18n="thName">الاسم</th>
+                                <th class="px-6 py-4" data-i18n="thPrice">السعر</th>
+                                <th class="px-6 py-4" data-i18n="thSubImages">الصور الفرعية</th>
+                                <th class="px-6 py-4" data-i18n="thPdf">دليل الاستعمال</th>
+                                <th class="px-6 py-4 text-center" data-i18n="thActions">العمليات</th>
                             </tr>
                         </thead>
                         <tbody id="adminProductsTable" class="divide-y divide-slate-100 text-sm">
@@ -310,59 +315,88 @@
 
     </main>
 
-    <!-- Product Modal (Add / Edit) -->
-    <div id="productModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <!-- Product Modal (Add / Edit) with Bilingual Tabs -->
+    <div id="productModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
         <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl border border-slate-100 overflow-hidden max-h-[95vh] flex flex-col">
             <!-- Modal Header -->
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
-                <h3 id="modalTitle" class="text-lg font-bold text-slate-900">إضافة صندوق جديد</h3>
-                <button onclick="closeProductModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 id="modalTitle" class="text-lg font-bold text-slate-900">إضافة صندوق جديد للكتالوج</h3>
+                <button type="button" onclick="closeProductModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <!-- Tab Buttons for Admin Modal translation input -->
+            <div class="flex border-b border-slate-100 bg-slate-50/50">
+                <button type="button" onclick="switchFormTab('ar')" id="tab-btn-ar" class="flex-1 py-3 text-center text-xs font-bold transition-all border-b-2 border-transparent">
+                    <i class="fa-solid fa-language ml-1"></i> البيانات باللغة العربية (AR)
+                </button>
+                <button type="button" onclick="switchFormTab('fr')" id="tab-btn-fr" class="flex-1 py-3 text-center text-xs font-bold transition-all border-b-2 border-transparent">
+                    <i class="fa-solid fa-language ml-1"></i> Données en Français (FR)
+                </button>
+                <button type="button" onclick="switchFormTab('commun')" id="tab-btn-commun" class="flex-1 py-3 text-center text-xs font-bold transition-all border-b-2 border-transparent">
+                    <i class="fa-solid fa-images ml-1"></i> البيانات المشتركة والصور
+                </button>
             </div>
             
             <!-- Modal Form -->
-            <form id="productForm" onsubmit="handleFormSubmit(event)" class="p-6 overflow-y-auto space-y-6">
+            <form id="productForm" onsubmit="handleFormSubmit(event)" class="p-6 overflow-y-auto space-y-6 flex-grow">
                 <input type="hidden" id="formProductId">
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- TAB 1: ARABIC DATA -->
+                <div id="form-tab-ar" class="form-tab-content space-y-6">
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-2">اسم المنتج *</label>
-                        <input type="text" id="formName" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all text-sm">
+                        <label class="block text-xs font-bold text-slate-500 mb-2">اسم المنتج باللغة العربية *</label>
+                        <input type="text" id="formNameAr" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all text-sm" placeholder="مثال: صندوق تيروردا الملكي">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-2">السعر (د.ج) *</label>
+                        <label class="block text-xs font-bold text-slate-500 mb-2">الوصف المتكامل باللغة العربية *</label>
+                        <div id="editor-ar-container" class="bg-white border border-slate-200 rounded-xl overflow-hidden"></div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2">دليل الاستعمال باللغة العربية (PDF) *</label>
+                        <input type="file" id="formPdfAr" accept="application/pdf" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer">
+                        <span id="previewPdfTextAr" class="text-xs text-brand-600 font-semibold mt-1 block"></span>
+                    </div>
+                </div>
+
+                <!-- TAB 2: FRENCH DATA -->
+                <div id="form-tab-fr" class="form-tab-content space-y-6 hidden" dir="ltr">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2 text-left">Nom du produit en Français *</label>
+                        <input type="text" id="formNameFr" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all text-sm text-left" placeholder="Ex: Boîte Royale Tirourda">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2 text-left">Description complète en Français *</label>
+                        <div id="editor-fr-container" class="bg-white border border-slate-200 rounded-xl overflow-hidden text-left"></div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2 text-left">Guide d'utilisation en Français (PDF) *</label>
+                        <input type="file" id="formPdfFr" accept="application/pdf" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer text-left">
+                        <span id="previewPdfTextFr" class="text-xs text-brand-600 font-semibold mt-1 block text-left"></span>
+                    </div>
+                </div>
+
+                <!-- TAB 3: COMMON DATA -->
+                <div id="form-tab-commun" class="form-tab-content space-y-6 hidden">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2">السعر الموحد (د.ج) *</label>
                         <input type="number" id="formPrice" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all text-sm">
                     </div>
-                </div>
-
-                <!-- Rich WYSIWYG Editor Field -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 mb-2">الوصف المتكامل والمنسق (يدعم الألوان، الخطوط، الصور، والفيديو) *</label>
-                    <div id="editor-container" class="bg-white border border-slate-200 rounded-xl overflow-hidden">
-                        <!-- Quill editor populated here -->
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Cover File -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-2">صورة غلاف البوكس *</label>
-                        <input type="file" id="formCover" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer">
-                        <div id="previewCoverWrapper" class="mt-2 h-16 w-16 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 hidden">
-                            <img id="previewCover" src="" class="w-full h-full object-cover" onerror="handleImageError(this)">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Cover File -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-2">صورة غلاف البوكس *</label>
+                            <input type="file" id="formCover" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer">
+                            <div id="previewCoverWrapper" class="mt-2 h-16 w-16 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 hidden">
+                                <img id="previewCover" src="" class="w-full h-full object-cover" onerror="handleImageError(this)">
+                            </div>
+                        </div>
+                        <!-- Gallery Files -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-2">صور المنتج الإضافية (معرض الصور) *</label>
+                            <input type="file" id="formGallery" accept="image/*" multiple class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer">
+                            <div id="previewGalleryWrapper" class="mt-2 flex flex-wrap gap-2"></div>
                         </div>
                     </div>
-                    <!-- Gallery Files -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-2">صور المنتج الإضافية (معرض الصور) *</label>
-                        <input type="file" id="formGallery" accept="image/*" multiple class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer">
-                        <div id="previewGalleryWrapper" class="mt-2 flex flex-wrap gap-2"></div>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 mb-2">رفع دليل الاستعمال (PDF) *</label>
-                    <input type="file" id="formPdf" accept="application/pdf" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer">
-                    <span id="previewPdfText" class="text-xs text-brand-600 font-semibold mt-1 block"></span>
                 </div>
 
                 <!-- Footer Operations -->
@@ -377,102 +411,204 @@
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-100 py-6">
         <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
-            &copy; 2026 Tirourda Catalogue. جميع الحقوق محفوظة لشركة تيروردا للتغليف الفاخر.
+            &copy; 2026 Tirourda Catalogue. <span data-i18n="title">كتالوج تيروردا</span>. All rights reserved.
         </div>
     </footer>
 
     <!-- Swiper JS & Application Logic -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
+        // Dictionary for translation mapping
+        const translations = {
+            ar: {
+                title: "كتالوج تيروردا",
+                subtitle: "التعبئة والتغليف العصري والفاخر",
+                backToCatalog: "العودة للكتالوج الرئيسي",
+                specsHeader: "المواصفات والتفاصيل الكاملة:",
+                downloadPdf: "تحميل دليل الاستعمال الشامل (PDF)",
+                viewDetails: "عرض التفاصيل",
+                currency: "د.ج",
+                adminLoginTitle: "تسجيل دخول الإدارة",
+                adminLoginSub: "يرجى تسجيل الدخول للوصول إلى لوحة التحكم",
+                username: "اسم المستخدم",
+                password: "كلمة المرور",
+                loginBtn: "دخول",
+                adminTitle: "لوحة التحكم الاحترافية",
+                adminSub: "تعديل وإضافة منتجات الكتالوج ومتابعة إحصائيات النظام اليومية.",
+                logout: "تسجيل الخروج",
+                statVisitsDay: "زيارات اليوم",
+                statVisitsMonth: "زيارات الشهر الحالي",
+                statActiveProducts: "المنتجات النشطة",
+                weeklyActivity: "نشاط الزوار الأسبوعي",
+                quickOperations: "العمليات السريعة",
+                addBoxTitle: "إضافة بوكس / منتج جديد",
+                addBoxSub: "أدخل مواصفات المنتج الجديد باللغتين، ارفع الصور، وحدد ملف دليل الاستعمال.",
+                addProductBtn: "إضافة منتج جديد",
+                listTitle: "قائمة الصناديق المتوفرة",
+                thCover: "صورة الغلاف",
+                thName: "الاسم",
+                thPrice: "السعر",
+                thSubImages: "الصور الفرعية",
+                thPdf: "دليل الاستعمال",
+                thActions: "العمليات",
+                noProducts: "لا توجد أي منتجات متاحة حالياً.",
+                alertSuccess: "تم حفظ البيانات بنجاح في الكتالوج.",
+                alertDelete: "هل أنت متأكد تماماً من رغبتك في إزالة هذا المنتج؟",
+                alertLoginErr: "خطأ في إدخال بيانات المشرف.",
+                pdfStatusSaved: "يوجد ملف PDF محفوظ مسبقاً.",
+                pdfStatusUploaded: "تم تحميل وحفظ ملف الـ PDF بنجاح!"
+            },
+            fr: {
+                title: "Catalogue Tirourda",
+                subtitle: "L'Emballage Moderne et Luxueux",
+                backToCatalog: "Retour au catalogue principal",
+                specsHeader: "Spécifications et Détails Complets :",
+                downloadPdf: "Télécharger le manuel complet (PDF)",
+                viewDetails: "Voir les détails",
+                currency: "DA",
+                adminLoginTitle: "Connexion d'Administration",
+                adminLoginSub: "Veuillez vous connecter pour accéder au tableau de bord",
+                username: "Nom d'utilisateur",
+                password: "Mot de passe",
+                loginBtn: "Connexion",
+                adminTitle: "Tableau de Bord Professionnel",
+                adminSub: "Modifier, ajouter des produits et suivre les statistiques d'accès quotidiennes.",
+                logout: "Se déconnecter",
+                statVisitsDay: "Visites du jour",
+                statVisitsMonth: "Visites ce mois",
+                statActiveProducts: "Produits actifs",
+                weeklyActivity: "Activité hebdomadaire des visiteurs",
+                quickOperations: "Opérations rapides",
+                addBoxTitle: "Ajouter un Box / Produit",
+                addBoxSub: "Saisissez les spécifications bilingues, importez des images et attribuez le manuel d'utilisation PDF.",
+                addProductBtn: "Ajouter un produit",
+                listTitle: "Liste des Boîtes Disponibles",
+                thCover: "Couverture",
+                thName: "Nom",
+                thPrice: "Prix",
+                thSubImages: "Images secondaires",
+                thPdf: "Manuel d'utilisation",
+                thActions: "Actions",
+                noProducts: "Aucun produit disponible pour le moment.",
+                alertSuccess: "Données sauvegardées avec succès dans le catalogue.",
+                alertDelete: "Êtes-vous sûr de vouloir supprimer définitivement ce produit ?",
+                alertLoginErr: "Erreur d'authentification administrateur.",
+                pdfStatusSaved: "Manuel PDF déjà enregistré.",
+                pdfStatusUploaded: "Fichier PDF importé avec succès !"
+            }
+        };
+
         // Solid backup base64 template for a box icon if any Unsplash link fails
         const fallbackSvgData = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%2316a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 3.73A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`;
 
-        // Fail-safe image loading mechanism
         function handleImageError(imgElement) {
-            imgElement.onerror = null; // prevents infinite loop
+            imgElement.onerror = null;
             imgElement.src = fallbackSvgData;
             imgElement.classList.add('bg-gradient-to-tr', 'from-brand-50', 'to-brand-100', 'p-8', 'object-contain');
         }
 
-        // Rich HTML Sample Content to demonstrate advanced colors, styles, lists and videos
-        const richDescSample1 = `
+        // Rich HTML Sample Content bilingual
+        const sampleAr1 = `
             <p style="color: #16a34a;"><strong>صندوق تيروردا الملكي هو تحفة فنية لتعبئة وتغليف الهدايا الراقية والحلويات الفاخرة.</strong></p>
             <h2 style="color: #1e293b;">أبرز الخصائص الفنية:</h2>
             <ul>
                 <li>هيكل مصنوع من الكرتون السويدي المقوى مزدوج الحماية.</li>
                 <li>مغطى بـ <strong>المخمل السويسري الطبيعي</strong> فائق النعومة.</li>
-                <li>زوايا معززة بشرائح برونزية رقيقة تضفي طابع الأصالة.</li>
             </ul>
-            <h2 style="color: #1e293b;">الألوان المتوفرة:</h2>
-            <p>يتوفر بـ <span style="color: #15803d; font-weight: bold;">أخضر غاباتي</span>، <span style="color: #b91c1c; font-weight: bold;">أحمر مخملي</span>، و <span style="color: #1e3a8a; font-weight: bold;">أزرق ملكي</span>.</p>
-            <p><em>شاهد طريقة الطي والتجهيز في هذا الفيديو التعريفي:</em></p>
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+        `;
+        const sampleFr1 = `
+            <p style="color: #16a34a;"><strong>Le Coffret Royal Tirourda est un chef-d'œuvre pour le conditionnement de cadeaux raffinés.</strong></p>
+            <h2 style="color: #1e293b;">Caractéristiques techniques :</h2>
+            <ul>
+                <li>Structure en carton suédois renforcé double protection.</li>
+                <li>Revêtement en <strong>velours naturel suisse</strong> de haute douceur.</li>
+            </ul>
             <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
         `;
 
-        const richDescSample2 = `
-            <p>تصميم مبتكر يتيح إغلاقاً مغناطيسياً سلساً ومميزاً للعلبة بلمسة واحدة.</p>
-            <h2>المميزات الرئيسية:</h2>
-            <ul>
-                <li>سماكة جدارية فائقة للحماية الكاملة.</li>
-                <li>طبقة داخلية مقاومة لامتصاص الرطوبة والزيوت.</li>
-                <li>مثالية تماماً لتعليب العطور والمجوهرات.</li>
-            </ul>
-            <p>صُممت لتجعل من عملية فتح العلبة تجربة لا تُنسى لزبائنك.</p>
-        `;
+        const sampleAr2 = `<p>تصميم مبتكر يتيح إغلاقاً مغناطيسياً سلساً ومميزاً للعلبة بلمسة واحدة.</p><h2>المميزات الرئيسية:</h2><ul><li>سماكة جدارية فائقة للحماية الكاملة.</li><li>مثالية تماماً لتعليب العطور والمجوهرات.</li></ul>`;
+        const sampleFr2 = `<p>Conception innovante permettant une fermeture magnétique douce d'un seul geste.</p><h2>Points forts :</h2><ul><li>Épaisseur de paroi supérieure pour une protection intégrale.</li><li>Idéal pour la parfumerie et la joaillerie fine.</li></ul>`;
 
-        // High Quality Initial Data
+        const sampleAr3 = `<p>علب كرافت صديقة للبيئة تلبي تطلعات العلامات المستدامة.</p><h2>المواصفات:</h2><ul><li>صناعة جزائرية ذات جودة عالية.</li><li>قابلة لإعادة التدوير والتحلل بالكامل.</li></ul>`;
+        const sampleFr3 = `<p>Boîtes en carton Kraft écoresponsables idéales pour le commerce durable.</p><h2>Spécifications :</h2><ul><li>Fabrication de haute qualité d'origine algérienne.</li><li>Entièrement biodégradable et recyclable.</li></ul>`;
+
+        // High Quality Initial Data Bilingual
         const initialProducts = [
             {
                 id: "1",
-                name: "صندوق تيروردا الملكي الأخضر",
+                name_ar: "صندوق تيروردا الملكي الأخضر",
+                name_fr: "Coffret Royal Vert Tirourda",
                 price: "5900",
-                desc: richDescSample1,
+                desc_ar: sampleAr1,
+                desc_fr: sampleFr1,
                 cover: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
                 gallery: [
                     "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
-                    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80",
-                    "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80"
+                    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80"
                 ],
-                pdf: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg=="
+                pdf_ar: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg==",
+                pdf_fr: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg=="
             },
             {
                 id: "2",
-                name: "علبة تيروردا السداسية البيضاء",
+                name_ar: "علبة تيروردا السداسية البيضاء",
+                name_fr: "Boîte Hexagonale Blanche Tirourda",
                 price: "3400",
-                desc: richDescSample2,
+                desc_ar: sampleAr2,
+                desc_fr: sampleFr2,
                 cover: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80",
                 gallery: [
                     "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80",
                     "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80"
                 ],
-                pdf: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg=="
+                pdf_ar: "",
+                pdf_fr: ""
+            },
+            {
+                id: "3",
+                name_ar: "صندوق كرافت للحفاظ على البيئة",
+                name_fr: "Boîte Kraft Écoresponsable",
+                price: "1900",
+                desc_ar: sampleAr3,
+                desc_fr: sampleFr3,
+                cover: "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80"
+                ],
+                pdf_ar: "",
+                pdf_fr: ""
             }
         ];
 
-        // System States
+        // Global State Parameters
         let products = JSON.parse(localStorage.getItem('tirourda_perf_data')) || initialProducts;
         let isAuth = sessionStorage.getItem('tirourda_perf_auth') === 'true';
+        let currentLang = localStorage.getItem('tirourda_lang') || 'ar';
         let swiperInstance = null;
-        let quillInstance = null;
+        let quillAr = null;
+        let quillFr = null;
 
-        // Base64 file buffers
+        // Base64 file buffers (Admin input)
         let base64Cover = '';
         let base64Gallery = [];
-        let base64Pdf = '';
+        let base64PdfAr = '';
+        let base64PdfFr = '';
 
         window.addEventListener('DOMContentLoaded', () => {
             if (!localStorage.getItem('tirourda_perf_data')) {
                 localStorage.setItem('tirourda_perf_data', JSON.stringify(initialProducts));
             }
+            initQuillEditors();
+            applyLanguage();
             detectRoute();
             window.addEventListener('hashchange', detectRoute);
             setupFileHandlers();
-            initQuillEditor();
         });
 
-        // Initialize Quill WYSIWYG rich text editor
-        function initQuillEditor() {
-            quillInstance = new Quill('#editor-container', {
+        // Initialize both Quill editors (RTL Arabic and LTR French)
+        function initQuillEditors() {
+            quillAr = new Quill('#editor-ar-container', {
                 theme: 'snow',
                 modules: {
                     toolbar: [
@@ -486,11 +622,63 @@
                     ]
                 }
             });
-            // Ensure editor text starts right-to-left for Arabic
-            quillInstance.root.setAttribute('dir', 'rtl');
+            quillAr.root.setAttribute('dir', 'rtl');
+
+            quillFr = new Quill('#editor-fr-container', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image', 'video'],
+                        ['clean']
+                    ]
+                }
+            });
+            quillFr.root.setAttribute('dir', 'ltr');
         }
 
-        // Router tracking only the hash
+        // Language toggle logic with real UI translation updates
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('tirourda_lang', lang);
+            applyLanguage();
+            detectRoute();
+        }
+
+        function applyLanguage() {
+            const data = translations[currentLang];
+            
+            // Adjust body direction and layout flow
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+
+            // Swap styling layouts between RTL and LTR
+            if (currentLang === 'ar') {
+                document.getElementById('lang-btn-ar').className = "px-3.5 py-1.5 rounded-full text-xs font-black bg-brand-500 text-white shadow-sm";
+                document.getElementById('lang-btn-fr').className = "px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:text-slate-800";
+                document.body.classList.add('rtl');
+                document.body.classList.remove('ltr');
+            } else {
+                document.getElementById('lang-btn-fr').className = "px-3.5 py-1.5 rounded-full text-xs font-black bg-brand-500 text-white shadow-sm";
+                document.getElementById('lang-btn-ar').className = "px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:text-slate-800";
+                document.body.classList.add('ltr');
+                document.body.classList.remove('rtl');
+            }
+
+            // Loop and translate all elements configured with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (data[key]) {
+                    el.innerText = data[key];
+                }
+            });
+        }
+
+        // Hash router
         function detectRoute() {
             const hash = window.location.hash;
             if (hash === '#admin') {
@@ -517,34 +705,39 @@
             if (sectionName === 'admin') document.getElementById('sec-admin').classList.remove('hidden');
         }
 
-        // 3D Coverflow initialization
+        // 3D Infinite Circular Coverflow Swiper implementation
         function initCarousel() {
             const wrapper = document.getElementById('carouselWrapper');
             wrapper.innerHTML = '';
 
             if (products.length === 0) {
-                wrapper.innerHTML = `<div class="text-slate-400 text-center w-full py-12 font-bold">لا توجد أي منتجات متاحة حالياً.</div>`;
+                wrapper.innerHTML = `<div class="text-slate-400 text-center w-full py-12 font-bold" data-i18n="noProducts">${translations[currentLang].noProducts}</div>`;
                 return;
             }
 
             products.forEach(prod => {
+                const titleText = currentLang === 'ar' ? prod.name_ar : prod.name_fr;
+                const priceFormat = Number(prod.price).toLocaleString();
+                const currencyVal = translations[currentLang].currency;
+                const viewDetailsBtn = translations[currentLang].viewDetails;
+
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide bg-white flex flex-col justify-between overflow-hidden relative cursor-pointer';
                 slide.setAttribute('onclick', `window.location.hash = '#product-${prod.id}'`);
                 slide.innerHTML = `
                     <div class="h-[70%] w-full overflow-hidden bg-slate-50 relative group">
-                        <img src="${prod.cover}" alt="${prod.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="handleImageError(this)">
+                        <img src="${prod.cover}" alt="${titleText}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="handleImageError(this)">
                         <div class="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md text-brand-600 font-extrabold px-3 py-1.5 rounded-xl shadow-md text-sm">
-                            ${prod.price} د.ج
+                            ${priceFormat} ${currencyVal}
                         </div>
                     </div>
-                    <div class="p-5 text-right flex flex-col justify-between flex-grow">
+                    <div class="p-5 text-right ltr:text-left flex flex-col justify-between flex-grow">
                         <div>
-                            <h3 class="font-extrabold text-slate-900 text-lg leading-snug truncate">${prod.name}</h3>
-                            <div class="text-xs text-slate-400 mt-1 line-clamp-2">اضغط لمعاينة كافة التفاصيل والأسعار والدليل.</div>
+                            <h3 class="font-extrabold text-slate-900 text-lg leading-snug truncate">${titleText}</h3>
+                            <div class="text-xs text-slate-400 mt-1 line-clamp-2">${translations[currentLang].fallbackText}</div>
                         </div>
                         <div class="flex items-center justify-between pt-3 border-t border-slate-100/60 mt-3">
-                            <span class="text-xs font-bold text-brand-500 flex items-center gap-1">عرض التفاصيل <i class="fa-solid fa-chevron-left text-[9px]"></i></span>
+                            <span class="text-xs font-bold text-brand-500 flex items-center gap-1">${viewDetailsBtn} <i class="fa-solid fa-chevron-left text-[9px] rotate-on-ltr"></i></span>
                             <span class="text-[9px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold uppercase tracking-wider">Tirourda Premium</span>
                         </div>
                     </div>
@@ -554,6 +747,7 @@
 
             if (swiperInstance) swiperInstance.destroy(true, true);
 
+            // Reconstruct Swiper loop
             swiperInstance = new Swiper('.mySwiper', {
                 effect: 'coverflow',
                 grabCursor: true,
@@ -561,6 +755,7 @@
                 slidesPerView: 'auto',
                 observer: true,
                 observeParents: true,
+                loop: products.length >= 3, // Enable circular infinite scroll safely with loop parameters
                 coverflowEffect: {
                     rotate: 15,
                     stretch: 0,
@@ -579,7 +774,7 @@
             });
         }
 
-        // Detail section renderer (Now supports Rich Text Content)
+        // Detailed product information
         function showProductDetails(id) {
             const prod = products.find(p => p.id === id);
             if (!prod) {
@@ -587,13 +782,16 @@
                 return;
             }
 
-            document.getElementById('detailTitle').innerText = prod.name;
+            // Set content based on selected language
+            const name = currentLang === 'ar' ? prod.name_ar : prod.name_fr;
+            const desc = currentLang === 'ar' ? prod.desc_ar : prod.desc_fr;
+            const pdf = currentLang === 'ar' ? prod.pdf_ar : prod.pdf_fr;
+
+            document.getElementById('detailTitle').innerText = name;
             document.getElementById('detailPrice').innerText = Number(prod.price).toLocaleString();
+            document.getElementById('detailDesc').innerHTML = desc || '';
             
-            // Render Rich HTML description content safely
-            document.getElementById('detailDesc').innerHTML = prod.desc;
-            
-            // Render main image
+            // Render main display image
             const mainImg = document.getElementById('detailMainImg');
             mainImg.src = prod.cover;
 
@@ -614,11 +812,11 @@
                 gallContainer.appendChild(button);
             });
 
-            // Handle PDF operations
+            // Action PDF file download logic
             const pdfBtn = document.getElementById('detailPdfBtn');
-            if (prod.pdf && prod.pdf !== '') {
-                pdfBtn.href = prod.pdf;
-                pdfBtn.download = `دليل_استعمال_${prod.name.replace(/\s+/g, '_')}.pdf`;
+            if (pdf && pdf !== '') {
+                pdfBtn.href = pdf;
+                pdfBtn.download = `Manual_${name.replace(/\s+/g, '_')}.pdf`;
                 pdfBtn.classList.remove('opacity-40', 'pointer-events-none');
             } else {
                 pdfBtn.href = '#';
@@ -629,7 +827,7 @@
             showSection('detail');
         }
 
-        // Fast and reliable login check
+        // Admin Access Checks
         function handleLogin(e) {
             e.preventDefault();
             const u = document.getElementById('loginUser').value.trim();
@@ -642,7 +840,7 @@
                 initAdminPanel();
                 document.getElementById('loginForm').reset();
             } else {
-                alert('خطأ في إدخال بيانات المشرف.');
+                alert(translations[currentLang].alertLoginErr);
             }
         }
 
@@ -652,7 +850,7 @@
             window.location.hash = '';
         }
 
-        /* --- Admin Operations --- */
+        /* --- Admin Operations & Dual-Editor Setup --- */
         let statsChart = null;
 
         function initAdminPanel() {
@@ -668,9 +866,9 @@
             statsChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
+                    labels: currentLang === 'ar' ? ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'] : ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
                     datasets: [{
-                        label: 'عدد الزيارات اليومية',
+                        label: currentLang === 'ar' ? 'عدد الزيارات اليومية' : 'Visites quotidiennes',
                         data: [1200, 1150, 1340, 1482, 1290, 1600, 1450],
                         borderColor: '#22c55e',
                         backgroundColor: 'rgba(34, 197, 94, 0.05)',
@@ -698,17 +896,21 @@
             tbody.innerHTML = '';
 
             products.forEach(prod => {
+                const displayName = currentLang === 'ar' ? prod.name_ar : prod.name_fr;
+                const pdfStatusAr = prod.pdf_ar ? 'AR ✅' : '';
+                const pdfStatusFr = prod.pdf_fr ? 'FR ✅' : '';
+
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-slate-50/50 transition-colors';
                 tr.innerHTML = `
                     <td class="px-6 py-4">
                         <img src="${prod.cover}" class="w-12 h-12 object-cover rounded-xl border border-slate-100 shadow-sm" onerror="handleImageError(this)">
                     </td>
-                    <td class="px-6 py-4 font-extrabold text-slate-800">${prod.name}</td>
-                    <td class="px-6 py-4 font-black text-brand-600">${prod.price} د.ج</td>
-                    <td class="px-6 py-4 text-slate-500 text-xs font-semibold">${prod.gallery ? prod.gallery.length : 1} صور</td>
+                    <td class="px-6 py-4 font-extrabold text-slate-800">${displayName}</td>
+                    <td class="px-6 py-4 font-black text-brand-600">${prod.price} ${translations[currentLang].currency}</td>
+                    <td class="px-6 py-4 text-slate-500 text-xs font-semibold">${prod.gallery ? prod.gallery.length : 1}</td>
                     <td class="px-6 py-4">
-                        ${prod.pdf ? '<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full"><i class="fa-solid fa-check ml-1"></i> متوفر</span>' : '<span class="bg-slate-100 text-slate-400 text-[10px] font-bold px-2.5 py-1 rounded-full">غير متوفر</span>'}
+                        <span class="text-xs font-bold text-emerald-800">${pdfStatusAr} ${pdfStatusFr}</span>
                     </td>
                     <td class="px-6 py-4 text-center">
                         <div class="flex items-center justify-center gap-2">
@@ -725,7 +927,7 @@
             });
         }
 
-        /* --- Canvas Compression System & Base64 Converter --- */
+        /* --- Canvas Compression System & Base64 Converters --- */
         function compressImage(file, maxDim = 500) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -772,7 +974,7 @@
         }
 
         function setupFileHandlers() {
-            // Main Cover Change
+            // Common Cover File Upload
             document.getElementById('formCover').addEventListener('change', async function(e) {
                 const file = e.target.files[0];
                 if (file) {
@@ -782,12 +984,12 @@
                         document.getElementById('previewCover').src = base64Cover;
                         wrapper.classList.remove('hidden');
                     } catch (err) {
-                        alert('حدث خطأ أثناء معالجة صورة الغلاف.');
+                        alert('Error processing cover image.');
                     }
                 }
             });
 
-            // Gallery Changes
+            // Common Gallery Files Upload
             document.getElementById('formGallery').addEventListener('change', async function(e) {
                 const files = e.target.files;
                 const wrapper = document.getElementById('previewGalleryWrapper');
@@ -804,41 +1006,70 @@
                         img.className = 'w-12 h-12 object-cover rounded-xl border border-slate-200';
                         wrapper.appendChild(img);
                     } catch (err) {
-                        console.error('Error compressing gallery item', err);
+                        console.error('Gallery file processing error', err);
                     }
                 }
             });
 
-            // PDF Change
-            document.getElementById('formPdf').addEventListener('change', async function(e) {
+            // Language Specific PDFs Upload
+            document.getElementById('formPdfAr').addEventListener('change', async function(e) {
                 const file = e.target.files[0];
                 if (file) {
                     try {
-                        base64Pdf = await convertPdfToBase64(file);
-                        document.getElementById('previewPdfText').innerText = 'تم تحميل وحفظ ملف الـ PDF بنجاح!';
+                        base64PdfAr = await convertPdfToBase64(file);
+                        document.getElementById('previewPdfTextAr').innerText = translations[currentLang].pdfStatusUploaded;
                     } catch (err) {
-                        alert('حدث خطأ أثناء تحميل دليل الاستخدام.');
+                        alert('PDF upload failed.');
+                    }
+                }
+            });
+
+            document.getElementById('formPdfFr').addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        base64PdfFr = await convertPdfToBase64(file);
+                        document.getElementById('previewPdfTextFr').innerText = translations[currentLang].pdfStatusUploaded;
+                    } catch (err) {
+                        alert('PDF upload failed.');
                     }
                 }
             });
         }
 
-        /* --- Modal CRUD interactions --- */
+        // Tab Switching in Product Form Modal
+        function switchFormTab(tabName) {
+            // Reset tab styles
+            document.querySelectorAll('.form-tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('#productModal [id^="tab-btn-"]').forEach(btn => {
+                btn.className = "flex-1 py-3 text-center text-xs font-bold transition-all border-b-2 border-transparent text-slate-400";
+            });
+
+            // Show and activate target tab
+            document.getElementById(`form-tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tabName}`).className = "flex-1 py-3 text-center text-xs font-black transition-all border-b-2 border-brand-500 text-brand-600 bg-brand-50/20";
+        }
+
+        /* --- Modal Operations --- */
         function openProductModal() {
             document.getElementById('productForm').reset();
             document.getElementById('formProductId').value = '';
-            document.getElementById('modalTitle').innerText = 'إضافة صندوق جديد للكتالوج';
+            document.getElementById('modalTitle').innerText = currentLang === 'ar' ? 'إضافة صندوق جديد للكتالوج' : 'Ajouter un nouveau produit au catalogue';
             document.getElementById('previewCoverWrapper').classList.add('hidden');
             document.getElementById('previewGalleryWrapper').innerHTML = '';
-            document.getElementById('previewPdfText').innerText = '';
+            document.getElementById('previewPdfTextAr').innerText = '';
+            document.getElementById('previewPdfTextFr').innerText = '';
 
-            // Reset Quill Editor state
-            quillInstance.root.innerHTML = '';
+            // Reset Quill editors
+            quillAr.root.innerHTML = '';
+            quillFr.root.innerHTML = '';
 
             base64Cover = '';
             base64Gallery = [];
-            base64Pdf = '';
+            base64PdfAr = '';
+            base64PdfFr = '';
 
+            switchFormTab('ar'); // Default to Arabic inputs tab
             document.getElementById('productModal').classList.remove('hidden');
         }
 
@@ -850,23 +1081,28 @@
             e.preventDefault();
 
             const pid = document.getElementById('formProductId').value;
-            const name = document.getElementById('formName').value;
+            const nameAr = document.getElementById('formNameAr').value;
+            const nameFr = document.getElementById('formNameFr').value;
             const price = document.getElementById('formPrice').value;
             
-            // Fetch Rich Text HTML content from the editor
-            const desc = quillInstance.root.innerHTML;
+            // Get rich text values from Quill instances
+            const descAr = quillAr.root.innerHTML;
+            const descFr = quillFr.root.innerHTML;
 
             if (pid) {
                 // Edit Mode
                 const index = products.findIndex(p => p.id === pid);
                 if (index !== -1) {
-                    products[index].name = name;
+                    products[index].name_ar = nameAr;
+                    products[index].name_fr = nameFr;
                     products[index].price = price;
-                    products[index].desc = desc;
+                    products[index].desc_ar = descAr;
+                    products[index].desc_fr = descFr;
 
                     if (base64Cover) products[index].cover = base64Cover;
                     if (base64Gallery.length > 0) products[index].gallery = base64Gallery;
-                    if (base64Pdf) products[index].pdf = base64Pdf;
+                    if (base64PdfAr) products[index].pdf_ar = base64PdfAr;
+                    if (base64PdfFr) products[index].pdf_fr = base64PdfFr;
                 }
             } else {
                 // Creation Mode
@@ -877,21 +1113,24 @@
 
                 const newProd = {
                     id: Date.now().toString(),
-                    name: name,
+                    name_ar: nameAr,
+                    name_fr: nameFr,
                     price: price,
-                    desc: desc,
+                    desc_ar: descAr,
+                    desc_fr: descFr,
                     cover: base64Cover,
                     gallery: base64Gallery.length > 0 ? base64Gallery : [base64Cover],
-                    pdf: base64Pdf
+                    pdf_ar: base64PdfAr,
+                    pdf_fr: base64PdfFr
                 };
                 products.push(newProd);
             }
 
-            // Sync database & Reload Dashboard
+            // Sync database & Reload Admin Dashboard
             localStorage.setItem('tirourda_perf_data', JSON.stringify(products));
             closeProductModal();
             initAdminPanel();
-            alert('تم حفظ البيانات بنجاح في الكتالوج.');
+            alert(translations[currentLang].alertSuccess);
         }
 
         function editProduct(id) {
@@ -899,15 +1138,17 @@
             if (!prod) return;
 
             openProductModal();
-            document.getElementById('modalTitle').innerText = 'تعديل الصندوق الحركي';
+            document.getElementById('modalTitle').innerText = currentLang === 'ar' ? 'تعديل الصندوق الحركي' : 'Modifier le produit';
             document.getElementById('formProductId').value = prod.id;
-            document.getElementById('formName').value = prod.name;
+            document.getElementById('formNameAr').value = prod.name_ar || '';
+            document.getElementById('formNameFr').value = prod.name_fr || '';
             document.getElementById('formPrice').value = prod.price;
             
-            // Set Rich HTML inside Quill editor
-            quillInstance.root.innerHTML = prod.desc || '';
+            // Render Rich HTML outputs in both Quill editor instances
+            quillAr.root.innerHTML = prod.desc_ar || '';
+            quillFr.root.innerHTML = prod.desc_fr || '';
 
-            // Load original covers/gallery previews
+            // Load images cover and gallery previews
             document.getElementById('previewCover').src = prod.cover;
             document.getElementById('previewCoverWrapper').classList.remove('hidden');
 
@@ -922,13 +1163,17 @@
                 });
             }
 
-            if (prod.pdf) {
-                document.getElementById('previewPdfText').innerText = 'يوجد ملف PDF محفوظ مسبقاً.';
+            // Check and update PDF statuses
+            if (prod.pdf_ar) {
+                document.getElementById('previewPdfTextAr').innerText = translations[currentLang].pdfStatusSaved;
+            }
+            if (prod.pdf_fr) {
+                document.getElementById('previewPdfTextFr').innerText = translations[currentLang].pdfStatusSaved;
             }
         }
 
         function deleteProduct(id) {
-            if (confirm('هل أنت متأكد تماماً من رغبتك في إزالة هذا المنتج؟')) {
+            if (confirm(translations[currentLang].alertDelete)) {
                 products = products.filter(p => p.id !== id);
                 localStorage.setItem('tirourda_perf_data', JSON.stringify(products));
                 initAdminPanel();
