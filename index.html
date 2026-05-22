@@ -1,499 +1,841 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lumiramahome - V15 Perfect Print</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tirourda Catalogue | كتالوج تيروردا</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary: #1e3a8a;
-            --accent: #d97706;
-            --bg: #f1f5f9;
-            --white: #ffffff;
-            --line: #dc2626;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Roboto', sans-serif; background: var(--bg); padding-bottom: 100px; }
-
-        /* HEADER & UI */
-        .navbar { background: var(--white); padding: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .logo { font-family: 'Oswald', sans-serif; font-size: 1.5rem; color: var(--primary); letter-spacing: 1px; }
-
-        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
-
-        /* CARDS */
-        .card { background: var(--white); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.03); margin-bottom: 20px; border: 1px solid #e2e8f0; }
-        .head-title { font-weight: 700; color: var(--primary); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .full { grid-column: span 2; }
-        
-        label { display: block; font-size: 0.8rem; font-weight: 600; color: #64748b; margin-bottom: 4px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #f8fafc; font-size: 0.95rem; }
-        input:focus { border-color: var(--primary); outline: none; background: #fff; }
-
-        .upload-box { border: 2px dashed #cbd5e1; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; background: #fff; position: relative; transition: 0.2s; }
-        .upload-box:hover { border-color: var(--primary); background: #eff6ff; }
-        .mini-preview { width: 100%; height: 120px; object-fit: contain; display: none; margin-top: 5px; }
-
-        .var-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 10px; position: relative; }
-        .btn-del { position: absolute; top: 10px; right: 10px; color: red; background: none; border: none; font-size: 1.1rem; cursor: pointer; }
-
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; gap: 8px; font-size: 1rem; }
-        .btn-add { background: var(--accent); color: white; margin-bottom: 10px; }
-        .btn-gen { background: #16a34a; color: white; }
-        .btn-reset { background: #ef4444; color: white; margin-top: 10px; }
-
-        /* --- CATALOGUE VIEW (FIXED FOR PDF) --- */
-        #catalog-view { display: none; }
-        
-        #final-catalog {
-            background: white; 
-            width: 210mm; /* A4 Width */
-            min-height: 297mm;
-            height: auto;
-            margin: 0 auto;
-            padding: 20px 30px; /* Padding for margins */
-            direction: ltr !important; 
-            text-align: left !important;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            overflow: hidden; /* Prevent overflow */
-        }
-
-        .cat-header { text-align: center; margin-bottom: 20px; border-bottom: 3px solid var(--primary); padding-bottom: 10px; }
-        .cat-logo { font-family: 'Oswald', sans-serif; font-size: 2.2rem; color: var(--primary); }
-
-        /* DUAL IMAGE HEADER - FIXED WIDTHS */
-        .dual-display { 
-            display: flex; 
-            justify-content: space-between; /* Space out evenly */
-            margin-bottom: 20px; 
-            page-break-inside: avoid;
-            width: 100%;
-        }
-        
-        .blueprint-card {
-            width: 48%; /* Each takes less than half */
-            border: 1px solid #ddd; 
-            background: #fff; 
-            padding: 5px;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        
-        .bp-label { font-size: 0.9rem; font-weight: bold; background: #f1f5f9; width: 100%; text-align: center; padding: 5px; margin-bottom: 5px; }
-        
-        /* Responsive Image Container */
-        .bp-img-container {
-            position: relative; 
-            width: 100%; /* Fill the card */
-            height: 250px; /* Fixed height */
-            display: flex; align-items: center; justify-content: center;
-        }
-        .bp-img { max-width: 90%; max-height: 90%; object-fit: contain; }
-
-        /* INFO BAR */
-        .info-bar {
-            background: var(--primary); color: white; padding: 12px; border-radius: 6px;
-            display: grid; grid-template-columns: 2fr 1fr 1.5fr 1.5fr; gap: 5px;
-            margin-bottom: 25px; width: 100%;
-        }
-        .info-item { text-align: center; border-right: 1px solid rgba(255,255,255,0.2); }
-        .info-item:last-child { border-right: none; }
-        .info-lbl { font-size: 0.65rem; opacity: 0.9; text-transform: uppercase; margin-bottom: 2px; }
-        .info-val { font-size: 1rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* ARROWS */
-        .dim-line { position: absolute; z-index: 10; display: flex; align-items: center; justify-content: center; }
-        .dim-badge { 
-            background: rgba(255,255,255,0.95); border: 1px solid var(--line); color: var(--line); 
-            font-size: 0.7rem; font-weight: 800; padding: 1px 4px; border-radius: 3px; 
-            white-space: nowrap;
-        }
-
-        .l-top { top: 5%; left: 10%; right: 10%; height: 2px; border-top: 2px solid var(--line); }
-        .l-top::before, .l-top::after { content:''; position: absolute; top:-4px; width: 2px; height: 10px; background: var(--line); }
-        .l-top::before{left:0;} .l-top::after{right:0;}
-        .l-top .dim-badge { position: absolute; top: -18px; }
-        
-        .l-bot { bottom: 5%; left: 10%; right: 10%; height: 2px; border-bottom: 2px solid var(--line); }
-        .l-bot::before, .l-bot::after { content:''; position: absolute; bottom:-4px; width: 2px; height: 10px; background: var(--line); }
-        .l-bot::before{left:0;} .l-bot::after{right:0;}
-        .l-bot .dim-badge { position: absolute; bottom: -18px; }
-        
-        .l-right { top: 10%; bottom: 10%; right: 2%; width: 2px; border-right: 2px solid var(--line); }
-        .l-right::before, .l-right::after { content:''; position: absolute; right:-4px; height: 2px; width: 10px; background: var(--line); }
-        .l-right::before{top:0;} .l-right::after{bottom:0;}
-        .l-right .dim-badge { position: absolute; right: 8px; transform: rotate(90deg); }
-        
-        .l-circ { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border: 2px dashed var(--line); border-radius: 50%; display: flex; justify-content: center; align-items: center; }
-        .l-circ .dim-badge { background: var(--line); color: white; border: none; }
-
-        /* VARIANTS GRID */
-        .v-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .v-card {
-            border: 1px solid #000; padding: 10px; display: flex; gap: 10px; align-items: center;
-            background: #fff; page-break-inside: avoid;
-        }
-        .v-img-box { width: 90px; height: 90px; border: 1px solid #eee; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .v-img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .v-info { flex: 1; }
-        .v-name { font-weight: 800; font-size: 1.1rem; text-transform: uppercase; }
-        .v-shape { font-size: 0.85rem; color: #555; font-style: italic; margin-bottom: 5px; }
-        .v-price { background: #000; color: #fff; padding: 3px 8px; font-weight: bold; border-radius: 3px; display: inline-block; font-size: 0.95rem; }
-
-        .fab-con { position: fixed; bottom: 20px; right: 20px; display: none; flex-direction: column; gap: 10px; z-index: 2000; }
-        .fab { width: 50px; height: 50px; border-radius: 50%; border: none; color: white; font-size: 1.2rem; cursor: pointer; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-
-        @media (max-width: 800px) {
-            #final-catalog { transform: scale(0.45); transform-origin: top left; margin-bottom: -150%; }
-        }
-    </style>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-</head>
-<body>
-
-    <div class="navbar">
-        <div class="logo">LUMIRAMAHOME</div>
-    </div>
-
-    <div class="container">
-        <!-- EDITOR -->
-        <div id="editor">
-            
-            <!-- GLOBAL INFO -->
-            <div class="card">
-                <div class="head-title"><i class="fas fa-info-circle"></i> Informations Générales</div>
-                <div class="grid-2">
-                    <div class="full">
-                        <label>Nom du Produit</label>
-                        <input type="text" id="pName" placeholder="Ex: Ensemble Jardin">
-                    </div>
-                    <div>
-                        <label>Nombre de Chaises</label>
-                        <input type="number" id="nbChair" placeholder="4">
-                    </div>
-                    <div>
-                        <label>Prix de Base (DA)</label>
-                        <input type="number" id="mainPrice" placeholder="Pour remplissage auto">
-                    </div>
-                    <div class="full">
-                        <label>Prix de Gros (Optionnel)</label>
-                        <input type="number" id="mainWhole" placeholder="Pour remplissage auto">
-                    </div>
-                </div>
-            </div>
-
-            <!-- TABLE CONFIG -->
-            <div class="card" style="border-left: 5px solid var(--primary);">
-                <div class="head-title"><i class="fas fa-table"></i> Configuration TABLE</div>
-                <div class="grid-2">
-                    <div><label>Largeur (Haut)</label><input type="number" id="tW"></div>
-                    <div><label>Longueur (Bas)</label><input type="number" id="tL"></div>
-                    <div><label>Hauteur (Droit)</label><input type="number" id="tH"></div>
-                    <div><label>Diamètre (Ø)</label><input type="number" id="tD"></div>
-                    <div class="full">
-                        <label>Image Table</label>
-                        <div class="upload-box" onclick="document.getElementById('fileTable').click()">
-                            <i class="fas fa-camera"></i> Choisir Image Table
-                            <img id="prevTable" class="mini-preview">
-                            <input type="file" id="fileTable" hidden accept="image/*" onchange="prev(this, 'prevTable', 'b64Table')">
-                            <input type="hidden" id="b64Table">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CHAIR CONFIG -->
-            <div class="card" style="border-left: 5px solid var(--accent);">
-                <div class="head-title"><i class="fas fa-chair"></i> Configuration CHAISE</div>
-                <div class="grid-2">
-                    <div><label>Largeur (Haut)</label><input type="number" id="cW"></div>
-                    <div><label>Longueur (Bas)</label><input type="number" id="cL"></div>
-                    <div><label>Hauteur (Droit)</label><input type="number" id="cH"></div>
-                    <div><label>Diamètre (Ø)</label><input type="number" id="cD"></div>
-                    <div class="full">
-                        <label>Image Chaise</label>
-                        <div class="upload-box" onclick="document.getElementById('fileChair').click()">
-                            <i class="fas fa-camera"></i> Choisir Image Chaise
-                            <img id="prevChair" class="mini-preview">
-                            <input type="file" id="fileChair" hidden accept="image/*" onchange="prev(this, 'prevChair', 'b64Chair')">
-                            <input type="hidden" id="b64Chair">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VARIANTS -->
-            <div class="card">
-                <div class="head-title"><i class="fas fa-swatchbook"></i> Catalogue (Variantes)</div>
-                <div id="vList"></div>
-                <button class="btn btn-add" onclick="addVar()"><i class="fas fa-plus"></i> Ajouter Variété</button>
-            </div>
-
-            <button class="btn btn-gen" onclick="generate()">GÉNÉRER LE CATALOGUE</button>
-            <button class="btn btn-reset" onclick="resetAll()">Effacer Tout</button>
-        </div>
-
-        <!-- CATALOGUE -->
-        <div id="catalog-view">
-            <div id="final-catalog">
-                <div class="cat-header">
-                    <div class="cat-logo">LUMIRAMAHOME</div>
-                    <div>CATALOGUE OFFICIEL</div>
-                    <small id="cDate"></small>
-                </div>
-
-                <div id="cContent"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- FABs -->
-    <div class="fab-con" id="fabs">
-        <button class="fab" style="background:#f59e0b" onclick="edit()"><i class="fas fa-pen"></i></button>
-        <button class="fab" style="background:#ef4444" onclick="toPDF()"><i class="fas fa-file-pdf"></i></button>
-        <button class="fab" style="background:#10b981" onclick="toXLS()"><i class="fas fa-file-excel"></i></button>
-    </div>
+    <!-- Chart.js for Admin Dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        let vars = [];
-        const noImg = "https://placehold.co/200?text=No+Img";
-
-        window.onload = () => {
-            loadData();
-            if(vars.length === 0) addVar();
-        };
-
-        function prev(inp, imgId, hidId, idx=null) {
-            if(inp.files[0]){
-                const r = new FileReader();
-                r.onload = e => {
-                    document.getElementById(hidId).value = e.target.result;
-                    document.getElementById(imgId).src = e.target.result;
-                    document.getElementById(imgId).style.display = 'block';
-                    if(idx !== null) { vars[idx].img = e.target.result; save(); }
-                    else save();
-                };
-                r.readAsDataURL(inp.files[0]);
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    }
+                }
             }
         }
+    </script>
 
-        function addVar() {
-            const basePrice = document.getElementById('mainPrice').value;
-            const baseWhole = document.getElementById('mainWhole').value;
-            const v = { id: Date.now(), name: '', shape: 'Carré', price: basePrice, whole: baseWhole, img: '' };
-            vars.push(v);
-            renderVar(v, vars.length - 1);
-            save();
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8fafc;
         }
+        /* 3D Carousel Container Styles */
+        .carousel-perspective {
+            perspective: 1000px;
+            overflow: hidden;
+        }
+        .carousel-container-3d {
+            position: relative;
+            width: 280px;
+            height: 380px;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .carousel-item-3d {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            backface-visibility: hidden;
+            transition: transform 0.8s, opacity 0.8s;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
 
-        function renderVar(v, i) {
-            const d = document.createElement('div');
-            d.className = 'var-item';
-            d.innerHTML = `
-                <button class="btn-del" onclick="delVar(${i})"><i class="fas fa-times"></i></button>
-                <div class="grid-2">
-                    <div class="full"><label>Nom Couleur</label><input type="text" value="${v.name}" oninput="updVar(${i},'name',this.value)"></div>
-                    <div>
-                        <label>Forme</label>
-                        <select onchange="updVar(${i},'shape',this.value)">
-                            <option value="Carré" ${v.shape==='Carré'?'selected':''}>Carré</option>
-                            <option value="Rond" ${v.shape==='Rond'?'selected':''}>Rond</option>
-                            <option value="Rectangulaire" ${v.shape==='Rectangulaire'?'selected':''}>Rectangulaire</option>
-                        </select>
-                    </div>
-                    <div><label>Prix (Auto)</label><input type="number" value="${v.price}" oninput="updVar(${i},'price',this.value)"></div>
-                    <div class="full"><label>Gros (Auto)</label><input type="number" value="${v.whole}" oninput="updVar(${i},'whole',this.value)"></div>
-                    <div class="full">
-                        <label>Photo</label>
-                        <div class="upload-box" onclick="document.getElementById('fv-${v.id}').click()" style="padding:10px;">
-                            <span><i class="fas fa-camera"></i></span>
-                            <img id="pv-${v.id}" src="${v.img||''}" style="height:40px;display:${v.img?'inline':'none'};vertical-align:middle;">
-                        </div>
-                        <input type="file" id="fv-${v.id}" hidden accept="image/*" onchange="prev(this, 'pv-${v.id}', 'hv-${v.id}', ${i})">
-                        <input type="hidden" id="hv-${v.id}" value="${v.img}">
-                    </div>
+    <!-- Header / Navigation -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" onclick="navigateTo('home')" class="flex items-center gap-3">
+                <span class="bg-primary-500 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/30">
+                    <i class="fa-solid fa-cubes text-lg"></i>
+                </span>
+                <div>
+                    <span class="text-xl font-extrabold text-slate-900 tracking-tight block">Tirourda</span>
+                    <span class="text-xs text-primary-600 font-semibold uppercase tracking-wider block -mt-1">Catalogue</span>
                 </div>
-            `;
-            document.getElementById('vList').appendChild(d);
-        }
-
-        function updVar(i, k, val) { vars[i][k] = val; save(); }
-        function delVar(i) { if(confirm('Supprimer?')) { vars.splice(i,1); save(); reloadVars(); } }
-        function reloadVars() { document.getElementById('vList').innerHTML=''; vars.forEach((v,i)=>renderVar(v,i)); }
-
-        function save() {
-            const main = {
-                name: document.getElementById('pName').value,
-                nb: document.getElementById('nbChair').value,
-                p: document.getElementById('mainPrice').value,
-                w: document.getElementById('mainWhole').value
-            };
-            const table = {
-                w: document.getElementById('tW').value, l: document.getElementById('tL').value,
-                h: document.getElementById('tH').value, d: document.getElementById('tD').value,
-                img: document.getElementById('b64Table').value
-            };
-            const chair = {
-                w: document.getElementById('cW').value, l: document.getElementById('cL').value,
-                h: document.getElementById('cH').value, d: document.getElementById('cD').value,
-                img: document.getElementById('b64Chair').value
-            };
-            localStorage.setItem('lumi_v15_main', JSON.stringify(main));
-            localStorage.setItem('lumi_v15_table', JSON.stringify(table));
-            localStorage.setItem('lumi_v15_chair', JSON.stringify(chair));
-            localStorage.setItem('lumi_v15_vars', JSON.stringify(vars));
-        }
-
-        function loadData() {
-            const m = JSON.parse(localStorage.getItem('lumi_v15_main'));
-            if(m) {
-                document.getElementById('pName').value = m.name;
-                document.getElementById('nbChair').value = m.nb;
-                document.getElementById('mainPrice').value = m.p;
-                document.getElementById('mainWhole').value = m.w;
-            }
-            const t = JSON.parse(localStorage.getItem('lumi_v15_table'));
-            if(t) {
-                document.getElementById('tW').value = t.w; document.getElementById('tL').value = t.l;
-                document.getElementById('tH').value = t.h; document.getElementById('tD').value = t.d;
-                document.getElementById('b64Table').value = t.img;
-                if(t.img) { document.getElementById('prevTable').src = t.img; document.getElementById('prevTable').style.display='block'; }
-            }
-            const c = JSON.parse(localStorage.getItem('lumi_v15_chair'));
-            if(c) {
-                document.getElementById('cW').value = c.w; document.getElementById('cL').value = c.l;
-                document.getElementById('cH').value = c.h; document.getElementById('cD').value = c.d;
-                document.getElementById('b64Chair').value = c.img;
-                if(c.img) { document.getElementById('prevChair').src = c.img; document.getElementById('prevChair').style.display='block'; }
-            }
-            const v = JSON.parse(localStorage.getItem('lumi_v15_vars'));
-            if(v) { vars = v; reloadVars(); }
-        }
-
-        function resetAll() {
-            localStorage.clear(); location.reload();
-        }
-
-        function getArrowsHTML(w, l, h, d) {
-            let html = '';
-            if(w) html += `<div class="dim-line l-top"><span class="dim-badge">Larg: ${w} cm</span></div>`;
-            if(l) html += `<div class="dim-line l-bot"><span class="dim-badge">Long: ${l} cm</span></div>`;
-            if(h) html += `<div class="dim-line l-right"><span class="dim-badge">Haut: ${h} cm</span></div>`;
-            if(d) html += `<div class="dim-line l-circ"><span class="dim-badge">Ø: ${d}</span></div>`;
-            return html;
-        }
-
-        function generate() {
-            const pName = document.getElementById('pName').value;
-            const nb = document.getElementById('nbChair').value || '0';
-            const price = document.getElementById('mainPrice').value || '0';
-            const wholePrice = document.getElementById('mainWhole').value || '0';
+            </a>
             
-            // Table Data
-            const tImg = document.getElementById('b64Table').value || noImg;
-            const tOvr = getArrowsHTML(
-                document.getElementById('tW').value, document.getElementById('tL').value,
-                document.getElementById('tH').value, document.getElementById('tD').value
-            );
+            <nav class="flex items-center gap-4">
+                <a href="#admin09" class="bg-slate-100 hover:bg-primary-50 text-slate-600 hover:text-primary-700 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    لوحة التحكم
+                </a>
+            </nav>
+        </div>
+    </header>
 
-            // Chair Data
-            const cImg = document.getElementById('b64Chair').value || noImg;
-            const cOvr = getArrowsHTML(
-                document.getElementById('cW').value, document.getElementById('cL').value,
-                document.getElementById('cH').value, document.getElementById('cD').value
-            );
-
-            document.getElementById('editor').style.display = 'none';
-            document.getElementById('catalog-view').style.display = 'block';
-            document.getElementById('fabs').style.display = 'flex';
-            document.getElementById('cDate').innerText = new Date().toLocaleDateString('fr-FR');
-
-            const headerHTML = `
-                <div class="dual-display">
-                    <div class="blueprint-card">
-                        <div class="bp-label">TABLE</div>
-                        <div class="bp-img-container"><img src="${tImg}" class="bp-img">${tOvr}</div>
-                    </div>
-                    <div class="blueprint-card">
-                        <div class="bp-label">CHAISE</div>
-                        <div class="bp-img-container"><img src="${cImg}" class="bp-img">${cOvr}</div>
-                    </div>
-                </div>
-            `;
-
-            // Updated Info Bar with Wholesale
-            const infoHTML = `
-                <div class="info-bar">
-                    <div class="info-item"><div class="info-lbl">PRODUIT</div><div class="info-val">${pName}</div></div>
-                    <div class="info-item"><div class="info-lbl">CHAISES</div><div class="info-val">${nb}</div></div>
-                    <div class="info-item"><div class="info-lbl">PRIX BASE</div><div class="info-val">${price} DA</div></div>
-                    <div class="info-item"><div class="info-lbl">PRIX GROS</div><div class="info-val">${wholePrice} DA</div></div>
-                </div>
-            `;
-
-            const gridHTML = vars.map(v => `
-                <div class="v-card">
-                    <div class="v-img-box"><img src="${v.img||noImg}" class="v-img"></div>
-                    <div class="v-info">
-                        <div class="v-name">${v.name || 'Standard'}</div>
-                        <div class="v-shape">${v.shape}</div>
-                        <div class="v-price">${v.price} DA</div>
-                        ${v.whole ? `<div style="font-size:0.8rem;color:green;font-weight:bold;">Gros: ${v.whole} DA</div>` : ''}
-                    </div>
-                </div>
-            `).join('');
-
-            document.getElementById('cContent').innerHTML = headerHTML + infoHTML + `<div class="v-grid">${gridHTML}</div>`;
-            window.scrollTo(0,0);
-        }
-
-        function edit() { document.getElementById('editor').style.display = 'block'; document.getElementById('catalog-view').style.display = 'none'; document.getElementById('fabs').style.display = 'none'; }
+    <!-- Main Content Containers -->
+    <main class="min-h-[calc(100vh-80px)] py-8">
         
-        // --- FIXED PDF EXPORT ---
-        function toPDF() { 
-            const el = document.getElementById('final-catalog');
-            
-            // Temporary Desktop Styling for PDF
-            const origTransform = el.style.transform;
-            el.style.transform = 'none';
-            el.style.width = '210mm';
-            el.style.margin = '0 auto';
-            el.style.marginBottom = '0';
-            el.style.height = 'auto'; // allow expand
+        <!-- 1. HOME VIEW (3D CAROUSEL) -->
+        <div id="view-home" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center py-10">
+            <div class="text-center max-w-2xl mb-12">
+                <span class="bg-primary-100 text-primary-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide">الجيل الجديد من العلب</span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 mt-4 leading-tight">كتالوج تيروردا العصري</h1>
+                <p class="text-slate-500 mt-3 text-lg">تصفّح تشكيلتنا المتميزة من الصناديق والعلب الفاخرة عبر العرض التفاعلي ثلاثي الأبعاد أدناه.</p>
+            </div>
 
-            const opt = {
-                margin: [5, 5, 5, 5], // 5mm margin all sides
-                filename: `Cat_${document.getElementById('pName').value}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
-                    useCORS: true,
-                    windowWidth: 1024 // Force desktop width capture
-                },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+            <!-- 3D Carousel Wrapper -->
+            <div class="carousel-perspective w-full flex flex-col items-center justify-center py-10 relative">
+                <div class="carousel-container-3d" id="carousel3D">
+                    <!-- Carousel Items will be dynamically loaded here -->
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex items-center gap-6 mt-12 z-10">
+                    <button onclick="rotateCarousel('prev')" class="bg-white hover:bg-primary-500 hover:text-white text-slate-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md transition-all duration-300">
+                        <i class="fa-solid fa-chevron-right text-lg"></i>
+                    </button>
+                    <span class="text-sm font-bold text-slate-500 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100" id="carouselIndex">1 / 1</span>
+                    <button onclick="rotateCarousel('next')" class="bg-white hover:bg-primary-500 hover:text-white text-slate-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md transition-all duration-300">
+                        <i class="fa-solid fa-chevron-left text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. PRODUCT DETAIL VIEW -->
+        <div id="view-detail" class="view-section max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
+            <!-- Back Button -->
+            <button onclick="navigateTo('home')" class="mb-8 flex items-center gap-2 text-slate-500 hover:text-primary-600 font-semibold transition-colors">
+                <i class="fa-solid fa-arrow-right"></i>
+                العودة للرئيسية
+            </button>
+
+            <div class="bg-white rounded-3xl shadow-xl shadow-slate-100 overflow-hidden border border-slate-100 grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 sm:p-10">
+                <!-- Image Gallery -->
+                <div class="space-y-4">
+                    <div class="aspect-square w-full rounded-2xl overflow-hidden bg-slate-50 border border-slate-100">
+                        <img id="detailMainImg" src="" alt="Product Image" class="w-full h-full object-cover transition-all duration-300">
+                    </div>
+                    <!-- Thumbnails -->
+                    <div class="grid grid-cols-4 gap-3" id="detailThumbnails">
+                        <!-- Thumbnails loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Info Details -->
+                <div class="flex flex-col justify-between py-2">
+                    <div>
+                        <span class="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-xs font-bold" id="detailCategory">صندوق فاخر</span>
+                        <h2 class="text-3xl font-bold text-slate-900 mt-3" id="detailTitle">اسم المنتج</h2>
+                        <div class="flex items-baseline gap-2 mt-4">
+                            <span class="text-3xl font-extrabold text-primary-600" id="detailPrice">0.00</span>
+                            <span class="text-sm font-bold text-slate-400">د.ج</span>
+                        </div>
+                        <div class="border-t border-slate-100 my-6"></div>
+                        <p class="text-slate-600 leading-relaxed" id="detailDesc">وصف طويل...</p>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row gap-4">
+                        <a id="detailPdfBtn" href="#" download class="flex-1 bg-primary-500 hover:bg-primary-600 text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-primary-500/20 text-center flex items-center justify-center gap-3 transition-all duration-300">
+                            <i class="fa-solid fa-file-pdf text-lg"></i>
+                            تحميل دليل الاستعمال (PDF)
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. ADMIN LOGIN VIEW -->
+        <div id="view-admin-login" class="view-section max-w-md mx-auto px-4 py-16 hidden">
+            <div class="bg-white p-8 rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 text-center">
+                <div class="bg-primary-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary-600">
+                    <i class="fa-solid fa-shield-halved text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">تسجيل دخول المشرف</h2>
+                <p class="text-sm text-slate-400 mb-6">الرجاء إدخال بيانات الاعتماد للوصول إلى لوحة التحكم</p>
+
+                <form id="adminLoginForm" onsubmit="handleLogin(event)" class="space-y-4 text-right">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2 mr-1">اسم المستخدم</label>
+                        <input type="text" id="loginUser" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all" placeholder="admin09">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2 mr-1">كلمة المرور</label>
+                        <input type="password" id="loginPass" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-all" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary-500/20 transition-all">تسجيل الدخول</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 4. ADMIN DASHBOARD VIEW -->
+        <div id="view-admin-dashboard" class="view-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-slate-900">لوحة التحكم الاحترافية</h1>
+                    <p class="text-slate-500 mt-1">إدارة الكتالوج، المنتجات وإحصائيات الزيارات اليومية والشهرية.</p>
+                </div>
+                <button onclick="handleLogout()" class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 self-start">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    تسجيل الخروج
+                </button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 flex items-center gap-5">
+                    <div class="bg-primary-50 text-primary-600 w-14 h-14 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 block">زيارات اليوم</span>
+                        <span class="text-2xl font-black text-slate-800 block mt-1">1,240</span>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 flex items-center gap-5">
+                    <div class="bg-blue-50 text-blue-600 w-14 h-14 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 block">الزيارات الشهرية</span>
+                        <span class="text-2xl font-black text-slate-800 block mt-1">38,500</span>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 flex items-center gap-5">
+                    <div class="bg-emerald-50 text-emerald-600 w-14 h-14 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-box-open"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 block">إجمالي المنتجات</span>
+                        <span class="text-2xl font-black text-slate-800 block mt-1" id="statTotalProducts">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart and Quick Form -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Analytics Chart -->
+                <div class="bg-white p-6 rounded-3xl shadow-md border border-slate-100 lg:col-span-2">
+                    <h3 class="text-lg font-bold text-slate-900 mb-4">تحليل حركة الزوار (آخر 7 أيام)</h3>
+                    <div class="h-64">
+                        <canvas id="visitorChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Add/Edit Trigger Box -->
+                <div class="bg-gradient-to-br from-primary-500 to-emerald-600 text-white p-6 rounded-3xl shadow-lg flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">إدارة سريعة للمنتجات</h3>
+                        <p class="text-primary-100 text-sm leading-relaxed">أضف صناديق وعلب جديدة للكتالوج، ارفع صور المعرض ودليل الاستعمال PDF بسهولة مطلقة.</p>
+                    </div>
+                    <button onclick="openProductModal()" class="w-full bg-white text-primary-700 hover:bg-primary-50 font-bold py-3.5 rounded-xl shadow-md transition-all mt-6 text-center block">
+                        <i class="fa-solid fa-plus ml-2"></i>إضافة منتج جديد
+                    </button>
+                </div>
+            </div>
+
+            <!-- Existing Products Section -->
+            <div class="bg-white rounded-3xl shadow-md border border-slate-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-slate-900">إدارة المنتجات المضافة</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right">
+                        <thead class="bg-slate-50 text-slate-500 text-xs font-bold uppercase">
+                            <tr>
+                                <th class="px-6 py-4">صورة الغلاف</th>
+                                <th class="px-6 py-4">اسم المنتج</th>
+                                <th class="px-6 py-4">السعر (د.ج)</th>
+                                <th class="px-6 py-4">عدد الصور</th>
+                                <th class="px-6 py-4">دليل الاستعمال</th>
+                                <th class="px-6 py-4 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminProductsTable" class="divide-y divide-slate-100 text-sm">
+                            <!-- Table Rows loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Product Form Modal (Add / Edit) -->
+    <div id="productModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                <h3 id="modalTitle" class="text-xl font-bold text-slate-900">إضافة صندوق جديد</h3>
+                <button onclick="closeProductModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <!-- Modal Body -->
+            <form id="productForm" onsubmit="saveProduct(event)" class="p-6 overflow-y-auto space-y-6">
+                <input type="hidden" id="formProductId">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2">اسم المنتج *</label>
+                        <input type="text" id="formName" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2">السعر (د.ج) *</label>
+                        <input type="number" id="formPrice" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2">الوصف الطويل للمنتج *</label>
+                    <textarea id="formDesc" rows="4" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2">صورة غلاف البوكس الرئيسي *</label>
+                        <input type="file" id="formCoverImg" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer">
+                        <div id="coverPreview" class="mt-2 h-20 w-20 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 hidden">
+                            <img src="" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2">صور إضافية للمعرض (تعدد الاختيار) *</label>
+                        <input type="file" id="formGalleryImgs" accept="image/*" multiple class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer">
+                        <div id="galleryPreviews" class="mt-2 flex gap-2 flex-wrap"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2">رفع دليل الاستعمال (PDF) *</label>
+                    <input type="file" id="formPdf" accept="application/pdf" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer">
+                    <span id="pdfStatus" class="text-xs text-slate-400 mt-1 block"></span>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
+                    <button type="button" onclick="closeProductModal()" class="px-5 py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 font-semibold transition-all">إلغاء</button>
+                    <button type="submit" class="px-6 py-2.5 bg-primary-500 hover:bg-primary-600 text-white font-bold rounded-xl shadow-lg shadow-primary-500/10 transition-all">حفظ البيانات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
+            &copy; 2026 Tirourda Catalogue. جميع الحقوق محفوظة. صُمم باحترافية وأناقة.
+        </div>
+    </footer>
+
+    <!-- JS Scripts & Logic -->
+    <script>
+        // Default Dummy Data to populate the page on initial load
+        const defaultProducts = [
+            {
+                id: "1",
+                name: "صندوق الزمرد الفاخر",
+                price: "4500",
+                desc: "صندوق فاخر مصنوع يدوياً من الخشب الطبيعي المغلف بالجلد المخملي الأخضر اللامع. مصمم خصيصاً للمجوهرات الثمينة والتحف الصغيرة، مع بطانة داخلية حريرية تحمي مقتنياتك من الخدش والأتربة، وخطوط ذهبية تضفي طابعاً من العراقة والتميز.",
+                cover: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80"
+                ],
+                pdf: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg==" // Minimal valid dummy PDF
+            },
+            {
+                id: "2",
+                name: "علبة الياسمين للمناسبات",
+                price: "2900",
+                desc: "علبة كرتونية صلبة بيضاء بلمسات ذهبية أنيقة وشريط حريري رقيق، تناسب هدايا الأفراح والاحتفالات الخاصة. تم تصنيعها بمواد صديقة للبيئة قابلة لإعادة التدوير مع متانة عالية تتحمل النقل والحفظ.",
+                cover: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80"
+                ],
+                pdf: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg=="
+            },
+            {
+                id: "3",
+                name: "بوكس البساطة البيئي (Eco)",
+                price: "1800",
+                desc: "تصميم بسيط ومبتكر يعتمد على مبدأ الاستدامة. مثالي للمنتجات العضوية ومستحضرات التجميل الطبيعية. يتميز بمقاومته الفائقة للرطوبة وتصميمه الهندسي الذكي لسهولة الفتح والإغلاق دون الحاجة لمواد لاصقة كيميائية.",
+                cover: "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80"
+                ],
+                pdf: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg=="
+            }
+        ];
+
+        // Global State Variables
+        let products = JSON.parse(localStorage.getItem('tirourda_products')) || defaultProducts;
+        let isAdminLoggedIn = sessionStorage.getItem('tirourda_admin_auth') === 'true';
+        let currentCarouselIndex = 0;
+
+        // Base64 File Storage Arrays (for creation/edition)
+        let tempCoverBase64 = '';
+        let tempGalleryBase64Array = [];
+        let tempPdfBase64 = '';
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('tirourda_products')) {
+                localStorage.setItem('tirourda_products', JSON.stringify(defaultProducts));
+            }
+            handleRouting();
+            window.addEventListener('hashchange', handleRouting);
+            setupFileListeners();
+        });
+
+        // Simple Router based on window.location.hash
+        function handleRouting() {
+            const hash = window.location.hash;
+            hideAllViews();
+
+            if (hash === '#admin09') {
+                if (isAdminLoggedIn) {
+                    showView('view-admin-dashboard');
+                    loadAdminDashboard();
+                } else {
+                    showView('view-admin-login');
+                }
+            } else if (hash.startsWith('#product-')) {
+                const prodId = hash.replace('#product-', '');
+                showProductDetails(prodId);
+            } else {
+                showView('view-home');
+                init3DCarousel();
+            }
+        }
+
+        function hideAllViews() {
+            document.querySelectorAll('.view-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+        }
+
+        function showView(viewId) {
+            document.getElementById(viewId).classList.remove('hidden');
+        }
+
+        function navigateTo(target, id = '') {
+            if (target === 'home') {
+                window.location.hash = '';
+            } else if (target === 'product') {
+                window.location.hash = `#product-${id}`;
+            } else if (target === 'admin') {
+                window.location.hash = '#admin09';
+            }
+        }
+
+        /* --- CAROUSEL 3D LOGIC --- */
+        function init3DCarousel() {
+            const carousel = document.getElementById('carousel3D');
+            carousel.innerHTML = '';
             
-            html2pdf().set(opt).from(el).save().then(() => {
-                // Restore mobile preview style
-                if(window.innerWidth <= 800) {
-                    el.style.transform = 'scale(0.45)';
-                    el.style.transformOrigin = 'top left';
-                    el.style.marginBottom = '-150%';
+            if (products.length === 0) {
+                carousel.innerHTML = `<p class="text-slate-400 text-center py-10 font-semibold">لا توجد منتجات حالياً.</p>`;
+                document.getElementById('carouselIndex').innerText = "0 / 0";
+                return;
+            }
+
+            products.forEach((prod, idx) => {
+                const card = document.createElement('div');
+                card.className = 'carousel-item-3d bg-white border border-slate-100 flex flex-col justify-between p-4 cursor-pointer select-none';
+                card.dataset.index = idx;
+                card.onclick = () => {
+                    if (currentCarouselIndex === idx) {
+                        navigateTo('product', prod.id);
+                    } else {
+                        currentCarouselIndex = idx;
+                        updateCarouselLayout();
+                    }
+                };
+
+                card.innerHTML = `
+                    <div class="h-4/6 rounded-2xl overflow-hidden bg-slate-50 relative">
+                        <img src="${prod.cover}" alt="${prod.name}" class="w-full h-full object-cover pointer-events-none">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-primary-600 shadow-sm">${prod.price} د.ج</span>
+                    </div>
+                    <div class="mt-4 text-right">
+                        <h4 class="font-bold text-slate-900 text-lg truncate">${prod.name}</h4>
+                        <p class="text-xs text-slate-400 mt-1 truncate">${prod.desc}</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xs font-semibold text-primary-600 flex items-center gap-1">التفاصيل <i class="fa-solid fa-arrow-left text-[10px]"></i></span>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tirourda Pack</span>
+                        </div>
+                    </div>
+                `;
+                carousel.appendChild(card);
+            });
+
+            currentCarouselIndex = 0;
+            updateCarouselLayout();
+        }
+
+        function updateCarouselLayout() {
+            const cards = document.querySelectorAll('.carousel-item-3d');
+            const total = cards.length;
+            if (total === 0) return;
+
+            document.getElementById('carouselIndex').innerText = `${currentCarouselIndex + 1} / ${total}`;
+
+            cards.forEach((card, idx) => {
+                let offset = idx - currentCarouselIndex;
+                
+                // loop around logic for infinite loop style rotation
+                if (offset < -Math.floor(total / 2)) offset += total;
+                if (offset > Math.floor(total / 2)) offset -= total;
+
+                const rotateY = offset * 45; // rotation angle
+                const translateZ = Math.abs(offset) * -80 + 150; // depth
+                const translateX = offset * 220; // lateral spacing
+                const opacity = Math.abs(offset) > 2 ? 0 : 1 - Math.abs(offset) * 0.35;
+                const zIndex = 100 - Math.abs(offset);
+
+                card.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg)`;
+                card.style.opacity = opacity;
+                card.style.zIndex = zIndex;
+                card.style.pointerEvents = Math.abs(offset) > 1 ? 'none' : 'auto';
+
+                if (offset === 0) {
+                    card.classList.add('ring-4', 'ring-primary-500/20', 'border-primary-500');
+                } else {
+                    card.classList.remove('ring-4', 'ring-primary-500/20', 'border-primary-500');
                 }
             });
         }
-        
-        function toXLS() {
-            const data = vars.map(v => ({ "Produit": document.getElementById('pName').value, "Couleur": v.name, "Forme": v.shape, "Prix": v.price }));
-            XLSX.writeFile(XLSX.utils.book_new(XLSX.utils.book_append_sheet(XLSX.utils.book_new(), XLSX.utils.json_to_sheet(data), "Cat")), "Catalogue.xlsx");
+
+        function rotateCarousel(direction) {
+            if (products.length === 0) return;
+            if (direction === 'next') {
+                currentCarouselIndex = (currentCarouselIndex + 1) % products.length;
+            } else {
+                currentCarouselIndex = (currentCarouselIndex - 1 + products.length) % products.length;
+            }
+            updateCarouselLayout();
+        }
+
+        /* --- PRODUCT DETAIL LOGIC --- */
+        function showProductDetails(id) {
+            const prod = products.find(p => p.id === id);
+            if (!prod) {
+                navigateTo('home');
+                return;
+            }
+
+            document.getElementById('detailTitle').innerText = prod.name;
+            document.getElementById('detailDesc').innerText = prod.desc;
+            document.getElementById('detailPrice').innerText = prod.price;
+            document.getElementById('detailMainImg').src = prod.cover;
+
+            const thumbsContainer = document.getElementById('detailThumbnails');
+            thumbsContainer.innerHTML = '';
+
+            // Handle standard gallery setup
+            const galleryArray = (prod.gallery && prod.gallery.length > 0) ? prod.gallery : [prod.cover];
+            galleryArray.forEach((imgSrc) => {
+                const thumb = document.createElement('button');
+                thumb.className = 'aspect-square rounded-xl overflow-hidden bg-slate-50 border border-slate-200 transition-all focus:ring-2 focus:ring-primary-500';
+                thumb.innerHTML = `<img src="${imgSrc}" class="w-full h-full object-cover">`;
+                thumb.onclick = () => {
+                    document.getElementById('detailMainImg').src = imgSrc;
+                };
+                thumbsContainer.appendChild(thumb);
+            });
+
+            // Setup PDF download button
+            const pdfBtn = document.getElementById('detailPdfBtn');
+            if (prod.pdf) {
+                pdfBtn.href = prod.pdf;
+                pdfBtn.download = `Tirourda_Guide_${prod.name.replace(/\s+/g, '_')}.pdf`;
+                pdfBtn.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                pdfBtn.href = '#';
+                pdfBtn.removeAttribute('download');
+                pdfBtn.classList.add('opacity-50', 'pointer-events-none');
+            }
+
+            showView('view-detail');
+        }
+
+        /* --- ADMIN AUTH LOGIC --- */
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('loginUser').value;
+            const pass = document.getElementById('loginPass').value;
+
+            if (user === 'admin09' && pass === 'abobob123') {
+                isAdminLoggedIn = true;
+                sessionStorage.setItem('tirourda_admin_auth', 'true');
+                navigateTo('admin');
+                alert('تم تسجيل الدخول بنجاح!');
+            } else {
+                alert('خطأ في اسم المستخدم أو كلمة المرور!');
+            }
+        }
+
+        function handleLogout() {
+            isAdminLoggedIn = false;
+            sessionStorage.removeItem('tirourda_admin_auth');
+            navigateTo('home');
+        }
+
+        /* --- ADMIN DASHBOARD LOGIC --- */
+        let visitorChartInstance = null;
+        function loadAdminDashboard() {
+            document.getElementById('statTotalProducts').innerText = products.length;
+            renderAdminProductsTable();
+            renderVisitorChart();
+        }
+
+        function renderVisitorChart() {
+            const ctx = document.getElementById('visitorChart').getContext('2d');
+            if (visitorChartInstance) {
+                visitorChartInstance.destroy();
+            }
+
+            visitorChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
+                    datasets: [{
+                        label: 'الزيارات اليومية',
+                        data: [820, 950, 1100, 1020, 1240, 1400, 1150],
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.05)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#22c55e',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { family: 'Cairo' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Cairo' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderAdminProductsTable() {
+            const tbody = document.getElementById('adminProductsTable');
+            tbody.innerHTML = '';
+
+            products.forEach(prod => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-6 py-4">
+                        <img src="${prod.cover}" class="w-12 h-12 object-cover rounded-xl border border-slate-100">
+                    </td>
+                    <td class="px-6 py-4 font-bold text-slate-900">${prod.name}</td>
+                    <td class="px-6 py-4 text-primary-600 font-extrabold">${prod.price} د.ج</td>
+                    <td class="px-6 py-4 text-slate-500">${prod.gallery ? prod.gallery.length : 0} صور</td>
+                    <td class="px-6 py-4">
+                        ${prod.pdf ? '<span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full font-semibold">متوفر PDF</span>' : '<span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full font-semibold">غير متوفر</span>'}
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="editProduct('${prod.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-600 w-8 h-8 rounded-lg flex items-center justify-center transition-all">
+                                <i class="fa-solid fa-pen text-xs"></i>
+                            </button>
+                            <button onclick="deleteProduct('${prod.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 w-8 h-8 rounded-lg flex items-center justify-center transition-all">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* --- PRODUCT CRUD FUNCTIONS --- */
+        function openProductModal() {
+            document.getElementById('productForm').reset();
+            document.getElementById('formProductId').value = '';
+            document.getElementById('modalTitle').innerText = 'إضافة منتج جديد';
+            document.getElementById('coverPreview').classList.add('hidden');
+            document.getElementById('galleryPreviews').innerHTML = '';
+            document.getElementById('pdfStatus').innerText = '';
+            
+            // Clear base64 buffers
+            tempCoverBase64 = '';
+            tempGalleryBase64Array = [];
+            tempPdfBase64 = '';
+
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.add('hidden');
+        }
+
+        // Listener setup to read files as Base64 (Allows persistence in localStorage)
+        function setupFileListeners() {
+            document.getElementById('formCoverImg').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        tempCoverBase64 = evt.target.result;
+                        const preview = document.getElementById('coverPreview');
+                        preview.querySelector('img').src = tempCoverBase64;
+                        preview.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            document.getElementById('formGalleryImgs').addEventListener('change', function(e) {
+                const files = e.target.files;
+                const container = document.getElementById('galleryPreviews');
+                container.innerHTML = '';
+                tempGalleryBase64Array = [];
+
+                Array.from(files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        const b64 = evt.target.result;
+                        tempGalleryBase64Array.push(b64);
+
+                        const img = document.createElement('img');
+                        img.src = b64;
+                        img.className = 'w-12 h-12 object-cover rounded-lg border border-slate-200';
+                        container.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            document.getElementById('formPdf').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        tempPdfBase64 = evt.target.result;
+                        document.getElementById('pdfStatus').innerText = 'تم رفع ملف الـ PDF بنجاح!';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+
+            const prodId = document.getElementById('formProductId').value;
+            const name = document.getElementById('formName').value;
+            const price = document.getElementById('formPrice').value;
+            const desc = document.getElementById('formDesc').value;
+
+            if (prodId) {
+                // Edit mode
+                const index = products.findIndex(p => p.id === prodId);
+                if (index !== -1) {
+                    products[index].name = name;
+                    products[index].price = price;
+                    products[index].desc = desc;
+
+                    if (tempCoverBase64) products[index].cover = tempCoverBase64;
+                    if (tempGalleryBase64Array.length > 0) products[index].gallery = tempGalleryBase64Array;
+                    if (tempPdfBase64) products[index].pdf = tempPdfBase64;
+                }
+            } else {
+                // Create mode
+                if (!tempCoverBase64) {
+                    alert('يرجى رفع صورة الغلاف للمنتج!');
+                    return;
+                }
+                const newProduct = {
+                    id: Date.now().toString(),
+                    name: name,
+                    price: price,
+                    desc: desc,
+                    cover: tempCoverBase64,
+                    gallery: tempGalleryBase64Array.length > 0 ? tempGalleryBase64Array : [tempCoverBase64],
+                    pdf: tempPdfBase64
+                };
+                products.push(newProduct);
+            }
+
+            // Sync with DB (LocalStorage)
+            localStorage.setItem('tirourda_products', JSON.stringify(products));
+            closeProductModal();
+            loadAdminDashboard();
+            alert('تم حفظ البيانات بنجاح!');
+        }
+
+        function editProduct(id) {
+            const prod = products.find(p => p.id === id);
+            if (!prod) return;
+
+            openProductModal();
+            document.getElementById('modalTitle').innerText = 'تعديل بيانات المنتج';
+            document.getElementById('formProductId').value = prod.id;
+            document.getElementById('formName').value = prod.name;
+            document.getElementById('formPrice').value = prod.price;
+            document.getElementById('formDesc').value = prod.desc;
+
+            // Show previews of current data
+            const coverPreview = document.getElementById('coverPreview');
+            coverPreview.querySelector('img').src = prod.cover;
+            coverPreview.classList.remove('hidden');
+
+            const gallPreviews = document.getElementById('galleryPreviews');
+            gallPreviews.innerHTML = '';
+            if (prod.gallery) {
+                prod.gallery.forEach(imgSrc => {
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.className = 'w-12 h-12 object-cover rounded-lg border border-slate-200';
+                    gallPreviews.appendChild(img);
+                });
+            }
+
+            if (prod.pdf) {
+                document.getElementById('pdfStatus').innerText = 'ملف الـ PDF محفوظ مسبقاً.';
+            }
+        }
+
+        function deleteProduct(id) {
+            if (confirm('هل أنت متأكد من رغبتك في حذف هذا المنتج نهائياً؟')) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('tirourda_products', JSON.stringify(products));
+                loadAdminDashboard();
+            }
         }
     </script>
 </body>
