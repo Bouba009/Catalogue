@@ -54,28 +54,53 @@
             background: linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%);
             transition: background 0.3s ease;
         }
+        
         /* Swiper 3D coverflow dimensions and styles */
         .swiper {
             width: 100%;
-            padding-top: 30px;
+            padding-top: 40px; /* مساحة علوية إضافية لمنع قطع البطاقة أثناء الطفو */
             padding-bottom: 50px;
         }
         .swiper-slide {
-            background-position: center;
-            background-size: cover;
             width: 310px;
-            height: 420px;
-            border-radius: 24px;
-            /* Glowing light green border effect (subtle for side products) */
-            border: 2px solid rgba(34, 197, 94, 0.25);
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+            height: 450px; /* زيادة الطول الكلي للحاوية لاستيعاب حركة الطفو */
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            display: flex;
+            align-items: flex-end;
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-        /* Vibrant glowing green border for the central active slide */
-        .swiper-slide-active {
-            border: 3px solid #22c55e;
-            box-shadow: 0 0 25px rgba(34, 197, 94, 0.55);
+
+        /* البطاقة الداخلية العائمة بدون إطار */
+        .slide-inner {
+            width: 100%;
+            height: 410px;
+            background: #ffffff;
+            border-radius: 24px;
+            border: none !important;
+            /* تأثير ظل ناعم يعطي عمقاً ثلاثي الأبعاد */
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.01);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
         }
+
+        /* طفو البطاقة النشطة في المنتصف بدون أي إطار */
+        .swiper-slide-active .slide-inner {
+            transform: translateY(-25px);
+            /* ظل ممتد بلون العلامة التجارية لتعزيز إيحاء الطفو والوهج */
+            box-shadow: 0 30px 60px -15px rgba(34, 197, 94, 0.22), 0 10px 20px -10px rgba(34, 197, 94, 0.12);
+        }
+
+        /* تأثير الطفو الإضافي عند تمرير الماوس فوق البطاقات الجانبية */
+        .swiper-slide:hover .slide-inner {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+        }
+
         /* Custom styles to render Quill's HTML output inside Product Detail */
         .rich-content h1, .rich-content h2, .rich-content h3 {
             font-weight: 800;
@@ -437,6 +462,7 @@
                 downloadPdf: "تحميل دليل الاستعمال الشامل (PDF)",
                 viewDetails: "عرض التفاصيل",
                 currency: "د.ج",
+                fallbackText: "تصميم أنيق وجودة عالية تضمن الحماية الكاملة لمنتجاتكم الفاخرة.",
                 adminLoginTitle: "تسجيل دخول الإدارة",
                 adminLoginSub: "يرجى تسجيل الدخول للوصول إلى لوحة التحكم",
                 username: "اسم المستخدم",
@@ -474,6 +500,7 @@
                 downloadPdf: "Télécharger le manuel complet (PDF)",
                 viewDetails: "Voir les détails",
                 currency: "DA",
+                fallbackText: "Un design d'emballage élégant garantissant une présentation et protection optimales.",
                 adminLoginTitle: "Connexion d'Administration",
                 adminLoginSub: "Veuillez vous connecter pour accéder au tableau de bord",
                 username: "Nom d'utilisateur",
@@ -745,25 +772,28 @@
                 const priceFormat = Number(prod.price).toLocaleString();
                 const currencyVal = translations[currentLang].currency;
                 const viewDetailsBtn = translations[currentLang].viewDetails;
+                const fallbackSub = translations[currentLang].fallbackText;
 
                 const slide = document.createElement('div');
-                slide.className = 'swiper-slide bg-white flex flex-col justify-between overflow-hidden relative cursor-pointer';
+                slide.className = 'swiper-slide relative cursor-pointer';
                 slide.setAttribute('onclick', `window.location.hash = '#product-${prod.id}'`);
                 slide.innerHTML = `
-                    <div class="h-[70%] w-full overflow-hidden bg-slate-50 relative group">
-                        <img src="${prod.cover}" alt="${titleText}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="handleImageError(this)">
-                        <div class="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md text-brand-600 font-extrabold px-3 py-1.5 rounded-xl shadow-md text-sm">
-                            ${priceFormat} ${currencyVal}
+                    <div class="slide-inner">
+                        <div class="h-[70%] w-full overflow-hidden bg-slate-50 relative group">
+                            <img src="${prod.cover}" alt="${titleText}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="handleImageError(this)">
+                            <div class="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md text-brand-600 font-extrabold px-3 py-1.5 rounded-xl shadow-md text-sm">
+                                ${priceFormat} ${currencyVal}
+                            </div>
                         </div>
-                    </div>
-                    <div class="p-5 text-right ltr:text-left flex flex-col justify-between flex-grow">
-                        <div>
-                            <h3 class="font-extrabold text-slate-900 text-lg leading-snug truncate">${titleText}</h3>
-                            <div class="text-xs text-slate-400 mt-1 line-clamp-2">${translations[currentLang].fallbackText}</div>
-                        </div>
-                        <div class="flex items-center justify-between pt-3 border-t border-slate-100/60 mt-3">
-                            <span class="text-xs font-bold text-brand-500 flex items-center gap-1">${viewDetailsBtn} <i class="fa-solid fa-chevron-left text-[9px] rotate-on-ltr"></i></span>
-                            <span class="text-[9px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold uppercase tracking-wider">Tirourda Premium</span>
+                        <div class="p-5 text-right ltr:text-left flex flex-col justify-between flex-grow">
+                            <div>
+                                <h3 class="font-extrabold text-slate-900 text-lg leading-snug truncate">${titleText}</h3>
+                                <div class="text-xs text-slate-400 mt-1 line-clamp-2">${fallbackSub}</div>
+                            </div>
+                            <div class="flex items-center justify-between pt-3 border-t border-slate-100/60 mt-3">
+                                <span class="text-xs font-bold text-brand-500 flex items-center gap-1">${viewDetailsBtn} <i class="fa-solid fa-chevron-left text-[9px] rotate-on-ltr"></i></span>
+                                <span class="text-[9px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold uppercase tracking-wider">Tirourda Premium</span>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -772,7 +802,7 @@
 
             if (swiperInstance) swiperInstance.destroy(true, true);
 
-            // Reconstruct Swiper loop (With fixed settings to ensure center placement with flanking slides)
+            // Reconstruct Swiper loop
             swiperInstance = new Swiper('.mySwiper', {
                 effect: 'coverflow',
                 grabCursor: true,
@@ -780,7 +810,7 @@
                 slidesPerView: 'auto',
                 observer: true,
                 observeParents: true,
-                loop: products.length >= 3, // Safe infinite loop mode
+                loop: products.length >= 3, 
                 initialSlide: 0,
                 coverflowEffect: {
                     rotate: 15,
@@ -808,7 +838,6 @@
                 return;
             }
 
-            // Set content based on selected language
             const name = currentLang === 'ar' ? prod.name_ar : prod.name_fr;
             const desc = currentLang === 'ar' ? prod.desc_ar : prod.desc_fr;
             const pdf = currentLang === 'ar' ? prod.pdf_ar : prod.pdf_fr;
@@ -817,7 +846,6 @@
             document.getElementById('detailPrice').innerText = Number(prod.price).toLocaleString();
             document.getElementById('detailDesc').innerHTML = desc || '';
             
-            // Render main display image
             const mainImg = document.getElementById('detailMainImg');
             mainImg.src = prod.cover;
 
@@ -838,7 +866,6 @@
                 gallContainer.appendChild(button);
             });
 
-            // Action PDF file download logic
             const pdfBtn = document.getElementById('detailPdfBtn');
             if (pdf && pdf !== '') {
                 pdfBtn.href = pdf;
@@ -1000,7 +1027,6 @@
         }
 
         function setupFileHandlers() {
-            // Common Cover File Upload
             document.getElementById('formCover').addEventListener('change', async function(e) {
                 const file = e.target.files[0];
                 if (file) {
@@ -1015,7 +1041,6 @@
                 }
             });
 
-            // Common Gallery Files Upload
             document.getElementById('formGallery').addEventListener('change', async function(e) {
                 const files = e.target.files;
                 const wrapper = document.getElementById('previewGalleryWrapper');
@@ -1037,7 +1062,6 @@
                 }
             });
 
-            // Language Specific PDFs Upload
             document.getElementById('formPdfAr').addEventListener('change', async function(e) {
                 const file = e.target.files[0];
                 if (file) {
@@ -1065,13 +1089,11 @@
 
         // Tab Switching in Product Form Modal
         function switchFormTab(tabName) {
-            // Reset tab styles
             document.querySelectorAll('.form-tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('#productModal [id^="tab-btn-"]').forEach(btn => {
                 btn.className = "flex-1 py-3 text-center text-xs font-bold transition-all border-b-2 border-transparent text-slate-400";
             });
 
-            // Show and activate target tab
             document.getElementById(`form-tab-${tabName}`).classList.remove('hidden');
             document.getElementById(`tab-btn-${tabName}`).className = "flex-1 py-3 text-center text-xs font-black transition-all border-b-2 border-brand-500 text-brand-600 bg-brand-50/20";
         }
@@ -1086,7 +1108,6 @@
             document.getElementById('previewPdfTextAr').innerText = '';
             document.getElementById('previewPdfTextFr').innerText = '';
 
-            // Reset Quill editors
             quillAr.root.innerHTML = '';
             quillFr.root.innerHTML = '';
 
@@ -1095,7 +1116,7 @@
             base64PdfAr = '';
             base64PdfFr = '';
 
-            switchFormTab('ar'); // Default to Arabic inputs tab
+            switchFormTab('ar'); 
             document.getElementById('productModal').classList.remove('hidden');
         }
 
@@ -1111,12 +1132,10 @@
             const nameFr = document.getElementById('formNameFr').value;
             const price = document.getElementById('formPrice').value;
             
-            // Get rich text values from Quill instances
             const descAr = quillAr.root.innerHTML;
             const descFr = quillFr.root.innerHTML;
 
             if (pid) {
-                // Edit Mode
                 const index = products.findIndex(p => p.id === pid);
                 if (index !== -1) {
                     products[index].name_ar = nameAr;
@@ -1131,7 +1150,6 @@
                     if (base64PdfFr) products[index].pdf_fr = base64PdfFr;
                 }
             } else {
-                // Creation Mode
                 if (!base64Cover) {
                     alert('من فضلك ارفع صورة الغلاف أولاً.');
                     return;
@@ -1152,7 +1170,6 @@
                 products.push(newProd);
             }
 
-            // Sync database & Reload Admin Dashboard
             localStorage.setItem('tirourda_perf_data', JSON.stringify(products));
             closeProductModal();
             initAdminPanel();
@@ -1170,11 +1187,9 @@
             document.getElementById('formNameFr').value = prod.name_fr || '';
             document.getElementById('formPrice').value = prod.price;
             
-            // Render Rich HTML outputs in both Quill editor instances
             quillAr.root.innerHTML = prod.desc_ar || '';
             quillFr.root.innerHTML = prod.desc_fr || '';
 
-            // Load images cover and gallery previews
             document.getElementById('previewCover').src = prod.cover;
             document.getElementById('previewCoverWrapper').classList.remove('hidden');
 
@@ -1189,7 +1204,6 @@
                 });
             }
 
-            // Check and update PDF statuses
             if (prod.pdf_ar) {
                 document.getElementById('previewPdfTextAr').innerText = translations[currentLang].pdfStatusSaved;
             }
@@ -1204,6 +1218,12 @@
                 localStorage.setItem('tirourda_perf_data', JSON.stringify(products));
                 initAdminPanel();
             }
+        }
+
+        // Error handling fallback for image load fails
+        function handleImageError(image) {
+            image.onerror = null;
+            image.src = "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80";
         }
     </script>
 </body>
