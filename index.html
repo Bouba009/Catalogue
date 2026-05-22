@@ -57,7 +57,7 @@
         /* Swiper 3D coverflow dimensions and styles */
         .swiper {
             width: 100%;
-            padding-top: 20px;
+            padding-top: 30px;
             padding-bottom: 50px;
         }
         .swiper-slide {
@@ -66,8 +66,15 @@
             width: 310px;
             height: 420px;
             border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
+            /* Glowing light green border effect (subtle for side products) */
+            border: 2px solid rgba(34, 197, 94, 0.25);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        /* Vibrant glowing green border for the central active slide */
+        .swiper-slide-active {
+            border: 3px solid #22c55e;
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.55);
         }
         /* Custom styles to render Quill's HTML output inside Product Detail */
         .rich-content h1, .rich-content h2, .rich-content h3 {
@@ -115,10 +122,10 @@
         }
     </style>
 </head>
-<body class="text-slate-800 min-h-screen flex flex-col justify-between">
+<body class="text-slate-800 min-h-screen flex flex-col justify-between pt-16">
 
-    <!-- Floating Language Switcher -->
-    <div class="fixed top-6 left-6 z-50 flex gap-1 bg-white p-1 rounded-full border border-slate-200/80 shadow-md">
+    <!-- Language Switcher (Fixed Top Center) -->
+    <div class="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex gap-1 bg-white p-1 rounded-full border border-slate-200/80 shadow-md">
         <button onclick="changeLanguage('ar')" id="lang-btn-ar" class="px-3.5 py-1.5 rounded-full text-xs font-black transition-all">العربية</button>
         <button onclick="changeLanguage('fr')" id="lang-btn-fr" class="px-3.5 py-1.5 rounded-full text-xs font-black transition-all">Français</button>
     </div>
@@ -129,7 +136,10 @@
         <!-- SECTION 1: HOME (3D CAROUSEL) -->
         <section id="sec-home" class="view-section py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mt-6 mb-10">
-                <h1 id="home-title" class="text-5xl sm:text-6xl font-black text-slate-900 tracking-tight" data-i18n="title">كتالوج تيروردا</h1>
+                <!-- Dynamically colored title (Tirourda in Green, Catalogue in Black) -->
+                <h1 id="home-title" class="text-5xl sm:text-6xl font-black tracking-tight">
+                    <!-- Loaded dynamically via JS -->
+                </h1>
                 <p id="home-subtitle" class="text-brand-600 font-extrabold text-sm sm:text-base mt-2 tracking-widest uppercase" data-i18n="subtitle">التعبئة والتغليف العصري والفاخر</p>
                 <div class="h-1 w-20 bg-brand-500 mx-auto mt-6 rounded-full"></div>
             </div>
@@ -276,7 +286,7 @@
                 </div>
 
                 <!-- Create Trigger -->
-                <div class="bg-gradient-to-br from-brand-500 to-emerald-700 text-white p-6 rounded-3xl shadow-lg flex flex-col justify-between animate-pulse-slow">
+                <div class="bg-gradient-to-br from-brand-500 to-emerald-700 text-white p-6 rounded-3xl shadow-lg flex flex-col justify-between">
                     <div>
                         <span class="bg-white/20 text-white px-3 py-1 rounded-lg text-[10px] font-bold uppercase" data-i18n="quickOperations">العمليات السريعة</span>
                         <h3 class="text-xl font-bold mt-3 mb-2" data-i18n="addBoxTitle">إضافة بوكس / منتج جديد</h3>
@@ -316,7 +326,7 @@
     </main>
 
     <!-- Product Modal (Add / Edit) with Bilingual Tabs -->
-    <div id="productModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden animate-fade-in">
+    <div id="productModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl border border-slate-100 overflow-hidden max-h-[95vh] flex flex-col">
             <!-- Modal Header -->
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
@@ -411,7 +421,7 @@
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-100 py-6">
         <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
-            &copy; 2026 Tirourda Catalogue. <span data-i18n="title">كتالوج تيروردا</span>. All rights reserved.
+            &copy; 2026 Tirourda Catalogue. <span class="text-brand-500 font-bold">Tirourda</span> <span class="text-slate-600">Catalogue</span>. All rights reserved.
         </div>
     </footer>
 
@@ -421,7 +431,6 @@
         // Dictionary for translation mapping
         const translations = {
             ar: {
-                title: "كتالوج تيروردا",
                 subtitle: "التعبئة والتغليف العصري والفاخر",
                 backToCatalog: "العودة للكتالوج الرئيسي",
                 specsHeader: "المواصفات والتفاصيل الكاملة:",
@@ -459,7 +468,6 @@
                 pdfStatusUploaded: "تم تحميل وحفظ ملف الـ PDF بنجاح!"
             },
             fr: {
-                title: "Catalogue Tirourda",
                 subtitle: "L'Emballage Moderne et Luxueux",
                 backToCatalog: "Retour au catalogue principal",
                 specsHeader: "Spécifications et Détails Complets :",
@@ -498,16 +506,7 @@
             }
         };
 
-        // Solid backup base64 template for a box icon if any Unsplash link fails
-        const fallbackSvgData = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%2316a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 3.73A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`;
-
-        function handleImageError(imgElement) {
-            imgElement.onerror = null;
-            imgElement.src = fallbackSvgData;
-            imgElement.classList.add('bg-gradient-to-tr', 'from-brand-50', 'to-brand-100', 'p-8', 'object-contain');
-        }
-
-        // Rich HTML Sample Content bilingual
+        // Rich HTML Sample Content bilingual (Using standard Unsplash references)
         const sampleAr1 = `
             <p style="color: #16a34a;"><strong>صندوق تيروردا الملكي هو تحفة فنية لتعبئة وتغليف الهدايا الراقية والحلويات الفاخرة.</strong></p>
             <h2 style="color: #1e293b;">أبرز الخصائص الفنية:</h2>
@@ -533,7 +532,10 @@
         const sampleAr3 = `<p>علب كرافت صديقة للبيئة تلبي تطلعات العلامات المستدامة.</p><h2>المواصفات:</h2><ul><li>صناعة جزائرية ذات جودة عالية.</li><li>قابلة لإعادة التدوير والتحلل بالكامل.</li></ul>`;
         const sampleFr3 = `<p>Boîtes en carton Kraft écoresponsables idéales pour le commerce durable.</p><h2>Spécifications :</h2><ul><li>Fabrication de haute qualité d'origine algérienne.</li><li>Entièrement biodégradable et recyclable.</li></ul>`;
 
-        // High Quality Initial Data Bilingual
+        const sampleAr4 = `<p>علبة الياسمين الفاخرة المخصصة للأعراس والمناسبات العائلية الكبرى.</p><h2>المميزات:</h2><ul><li>شريط حريري ناعم مدمج بالإغلاق.</li><li>لمسة ذهبية لماعة على الحواف.</li></ul>`;
+        const sampleFr4 = `<p>Boîte Jasmin élégante conçue spécialement pour les mariages et grandes réceptions.</p><h2>Détails :</h2><ul><li>Ruban en soie douce intégré.</li><li>Finition dorée brillante sur les bordures.</li></ul>`;
+
+        // 4 High Quality Initial Data Bilingual to support a seamless looping center view
         const initialProducts = [
             {
                 id: "1",
@@ -578,6 +580,21 @@
                 ],
                 pdf_ar: "",
                 pdf_fr: ""
+            },
+            {
+                id: "4",
+                name_ar: "علبة الياسمين الفاخرة",
+                name_fr: "Coffret Jasmin Élégant",
+                price: "4200",
+                desc_ar: sampleAr4,
+                desc_fr: sampleFr4,
+                cover: "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
+                gallery: [
+                    "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80"
+                ],
+                pdf_ar: "",
+                pdf_fr: ""
             }
         ];
 
@@ -589,7 +606,7 @@
         let quillAr = null;
         let quillFr = null;
 
-        // Base64 file buffers (Admin input)
+        // Base64 file buffers (Admin inputs)
         let base64Cover = '';
         let base64Gallery = [];
         let base64PdfAr = '';
@@ -606,7 +623,7 @@
             setupFileHandlers();
         });
 
-        // Initialize both Quill editors (RTL Arabic and LTR French)
+        // Initialize Quill WYSIWYG rich text editor
         function initQuillEditors() {
             quillAr = new Quill('#editor-ar-container', {
                 theme: 'snow',
@@ -660,11 +677,19 @@
             if (currentLang === 'ar') {
                 document.getElementById('lang-btn-ar').className = "px-3.5 py-1.5 rounded-full text-xs font-black bg-brand-500 text-white shadow-sm";
                 document.getElementById('lang-btn-fr').className = "px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:text-slate-800";
+                
+                // Color formatting: Tirourda in green, Catalogue in black (Arabic text flow)
+                document.getElementById('home-title').innerHTML = `<span class="text-slate-900">كتالوج</span> <span class="text-brand-500">تيروردا</span>`;
+                
                 document.body.classList.add('rtl');
                 document.body.classList.remove('ltr');
             } else {
                 document.getElementById('lang-btn-fr').className = "px-3.5 py-1.5 rounded-full text-xs font-black bg-brand-500 text-white shadow-sm";
                 document.getElementById('lang-btn-ar').className = "px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:text-slate-800";
+                
+                // Color formatting: Tirourda in green, Catalogue in black (French text flow)
+                document.getElementById('home-title').innerHTML = `<span class="text-slate-900">Catalogue</span> <span class="text-brand-500">Tirourda</span>`;
+                
                 document.body.classList.add('ltr');
                 document.body.classList.remove('rtl');
             }
@@ -705,7 +730,7 @@
             if (sectionName === 'admin') document.getElementById('sec-admin').classList.remove('hidden');
         }
 
-        // 3D Infinite Circular Coverflow Swiper implementation
+        // 3D Infinite Circular Coverflow Swiper implementation (Centered Slides, loop flanked correctly)
         function initCarousel() {
             const wrapper = document.getElementById('carouselWrapper');
             wrapper.innerHTML = '';
@@ -747,7 +772,7 @@
 
             if (swiperInstance) swiperInstance.destroy(true, true);
 
-            // Reconstruct Swiper loop
+            // Reconstruct Swiper loop (With fixed settings to ensure center placement with flanking slides)
             swiperInstance = new Swiper('.mySwiper', {
                 effect: 'coverflow',
                 grabCursor: true,
@@ -755,7 +780,8 @@
                 slidesPerView: 'auto',
                 observer: true,
                 observeParents: true,
-                loop: products.length >= 3, // Enable circular infinite scroll safely with loop parameters
+                loop: products.length >= 3, // Safe infinite loop mode
+                initialSlide: 0,
                 coverflowEffect: {
                     rotate: 15,
                     stretch: 0,
