@@ -4,14 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tirourda Catalogue | كتالوج تيروردا</title>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Google Fonts (Cairo) -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Swiper CSS for 3D Carousel -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <!-- Quill.js WYSIWYG Editor (Rich Text) -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
     <!-- Chart.js for Admin Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -47,7 +56,7 @@
         /* Swiper 3D coverflow dimensions and styles */
         .swiper {
             width: 100%;
-            padding-top: 40px;
+            padding-top: 20px;
             padding-bottom: 50px;
         }
         .swiper-slide {
@@ -59,36 +68,65 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
             transition: all 0.3s ease;
         }
+        /* Custom styles to render Quill's HTML output inside Product Detail */
+        .rich-content h1, .rich-content h2, .rich-content h3 {
+            font-weight: 800;
+            color: #0f172a;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .rich-content h1 { font-size: 1.5rem; }
+        .rich-content h2 { font-size: 1.25rem; }
+        .rich-content h3 { font-size: 1.1rem; }
+        .rich-content p {
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+            color: #475569;
+        }
+        .rich-content ul {
+            list-style-type: disc;
+            margin-right: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .rich-content ol {
+            list-style-type: decimal;
+            margin-right: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .rich-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 1rem 0;
+            display: inline-block;
+        }
+        .rich-content iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            margin: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        /* Quill custom styling modifications for RTL scroll */
+        .ql-editor {
+            text-align: right;
+            direction: rtl;
+            font-family: 'Cairo', sans-serif;
+            min-height: 200px;
+        }
     </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <!-- Header / Navigation (No Admin Button visible) -->
-    <header class="bg-white/75 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="#" onclick="window.location.hash = ''; return false;" class="flex items-center gap-3">
-                <span class="bg-brand-500 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20">
-                    <i class="fa-solid fa-cubes text-lg"></i>
-                </span>
-                <div>
-                    <span class="text-xl font-extrabold text-slate-900 tracking-tight block">Tirourda</span>
-                    <span class="text-[10px] text-brand-600 font-bold uppercase tracking-wider block -mt-1">Catalogue</span>
-                </div>
-            </a>
-            
-            <div class="text-xs text-slate-400 font-medium">التعبئة والتغليف الاحترافي</div>
-        </div>
-    </header>
-
-    <!-- Main Views Container -->
+    <!-- Main Content Grid -->
     <main class="flex-grow">
         
         <!-- SECTION 1: HOME (3D CAROUSEL) -->
         <section id="sec-home" class="view-section py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-10">
-                <span class="bg-brand-100 text-brand-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide">الكتالوج الحصري</span>
-                <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 mt-4 leading-tight">منتجات وعلب تيروردا</h1>
-                <p class="text-slate-500 mt-3 text-sm sm:text-base">تصفح التشكيلة الفاخرة عبر سحب العلب يميناً ويساراً، واضغط على أي علبة لعرض تفاصيلها ودليل استخدامها.</p>
+            <div class="text-center max-w-3xl mx-auto mt-6 mb-10">
+                <h1 class="text-5xl sm:text-6xl font-black text-slate-900 tracking-tight">كتالوج تيروردا</h1>
+                <p class="text-brand-600 font-extrabold text-sm sm:text-base mt-2 tracking-widest uppercase">التعبئة والتغليف العصري والفاخر</p>
+                <div class="h-1 w-20 bg-brand-500 mx-auto mt-6 rounded-full"></div>
             </div>
 
             <!-- Swiper 3D Coverflow Container -->
@@ -113,8 +151,8 @@
 
             <div class="bg-white rounded-3xl shadow-xl shadow-slate-100 overflow-hidden border border-slate-100 grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 sm:p-10">
                 <!-- Image Section (Left/Top) -->
-                <div class="lg:col-span-6 space-y-4">
-                    <div class="aspect-[4/3] w-full rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 relative" id="detailMainImgContainer">
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="aspect-[4/3] w-full rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 relative">
                         <img id="detailMainImg" src="" alt="Product Detail" class="w-full h-full object-cover transition-opacity duration-300" onerror="handleImageError(this)">
                     </div>
                     <!-- Gallery Images Grid -->
@@ -124,9 +162,9 @@
                 </div>
 
                 <!-- Info Section (Right/Bottom) -->
-                <div class="lg:col-span-6 flex flex-col justify-between py-2">
+                <div class="lg:col-span-7 flex flex-col justify-between py-2">
                     <div>
-                        <span class="bg-brand-50 text-brand-700 border border-brand-200/50 px-3 py-1 rounded-lg text-xs font-bold inline-block">صندوق احترافي</span>
+                        <span class="bg-brand-50 text-brand-700 border border-brand-200/50 px-3 py-1 rounded-lg text-xs font-bold inline-block">تيروردا للتغليف</span>
                         <h2 class="text-3xl font-black text-slate-900 mt-4 leading-tight" id="detailTitle">اسم المنتج</h2>
                         
                         <div class="flex items-baseline gap-2 mt-4 bg-brand-50/50 border border-brand-100/30 p-3 rounded-2xl w-fit">
@@ -136,15 +174,19 @@
                         </div>
                         
                         <div class="border-t border-slate-100 my-6"></div>
-                        <h4 class="font-bold text-slate-900 mb-2">وصف وتفاصيل المنتج:</h4>
-                        <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line" id="detailDesc">تفاصيل المنتج والوصف الطويل سيظهر هنا...</p>
+                        <h4 class="font-bold text-slate-900 mb-4 text-lg border-r-4 border-brand-500 pr-3">المواصفات والتفاصيل الكاملة:</h4>
+                        
+                        <!-- Rich HTML Content Viewport -->
+                        <div class="rich-content" id="detailDesc">
+                            <!-- Populated dynamically via innerHTML with custom formatting (colors, bold, images, videos) -->
+                        </div>
                     </div>
 
                     <!-- Actions -->
                     <div class="mt-8 pt-6 border-t border-slate-100">
                         <a id="detailPdfBtn" href="#" download class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-brand-500/20 text-center flex items-center justify-center gap-3 transition-all duration-300">
                             <i class="fa-solid fa-file-pdf text-xl"></i>
-                            تحميل دليل الاستعمال (PDF)
+                            تحميل دليل الاستعمال الشامل (PDF)
                         </a>
                     </div>
                 </div>
@@ -233,7 +275,7 @@
                     <div>
                         <span class="bg-white/20 text-white px-3 py-1 rounded-lg text-[10px] font-bold uppercase">العمليات السريعة</span>
                         <h3 class="text-xl font-bold mt-3 mb-2">إضافة بوكس / منتج جديد</h3>
-                        <p class="text-brand-100 text-xs leading-relaxed">أدخل مواصفات المنتج الجديد، ارفع الصور، وحدد ملف دليل الاستعمال بصيغة PDF فوراً.</p>
+                        <p class="text-brand-100 text-xs leading-relaxed">أدخل مواصفات المنتج الجديد، ارفع الصور، وحدد ملف دليل الاستعمال بصيغة PDF فوراً مع محتوى وصفي منسق.</p>
                     </div>
                     <button onclick="openProductModal()" class="w-full bg-white text-brand-700 hover:bg-brand-50 font-bold py-3.5 rounded-xl shadow-md transition-all mt-6">
                         <i class="fa-solid fa-plus ml-2"></i> إضافة منتج جديد
@@ -270,7 +312,7 @@
 
     <!-- Product Modal (Add / Edit) -->
     <div id="productModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col">
+        <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl border border-slate-100 overflow-hidden max-h-[95vh] flex flex-col">
             <!-- Modal Header -->
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                 <h3 id="modalTitle" class="text-lg font-bold text-slate-900">إضافة صندوق جديد</h3>
@@ -292,9 +334,12 @@
                     </div>
                 </div>
 
+                <!-- Rich WYSIWYG Editor Field -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 mb-2">الوصف الطويل للمنتج *</label>
-                    <textarea id="formDesc" rows="4" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all text-sm"></textarea>
+                    <label class="block text-xs font-bold text-slate-500 mb-2">الوصف المتكامل والمنسق (يدعم الألوان، الخطوط، الصور، والفيديو) *</label>
+                    <div id="editor-container" class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                        <!-- Quill editor populated here -->
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -330,7 +375,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 py-6 mt-12">
+    <footer class="bg-white border-t border-slate-100 py-6">
         <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400">
             &copy; 2026 Tirourda Catalogue. جميع الحقوق محفوظة لشركة تيروردا للتغليف الفاخر.
         </div>
@@ -349,13 +394,39 @@
             imgElement.classList.add('bg-gradient-to-tr', 'from-brand-50', 'to-brand-100', 'p-8', 'object-contain');
         }
 
+        // Rich HTML Sample Content to demonstrate advanced colors, styles, lists and videos
+        const richDescSample1 = `
+            <p style="color: #16a34a;"><strong>صندوق تيروردا الملكي هو تحفة فنية لتعبئة وتغليف الهدايا الراقية والحلويات الفاخرة.</strong></p>
+            <h2 style="color: #1e293b;">أبرز الخصائص الفنية:</h2>
+            <ul>
+                <li>هيكل مصنوع من الكرتون السويدي المقوى مزدوج الحماية.</li>
+                <li>مغطى بـ <strong>المخمل السويسري الطبيعي</strong> فائق النعومة.</li>
+                <li>زوايا معززة بشرائح برونزية رقيقة تضفي طابع الأصالة.</li>
+            </ul>
+            <h2 style="color: #1e293b;">الألوان المتوفرة:</h2>
+            <p>يتوفر بـ <span style="color: #15803d; font-weight: bold;">أخضر غاباتي</span>، <span style="color: #b91c1c; font-weight: bold;">أحمر مخملي</span>، و <span style="color: #1e3a8a; font-weight: bold;">أزرق ملكي</span>.</p>
+            <p><em>شاهد طريقة الطي والتجهيز في هذا الفيديو التعريفي:</em></p>
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+        `;
+
+        const richDescSample2 = `
+            <p>تصميم مبتكر يتيح إغلاقاً مغناطيسياً سلساً ومميزاً للعلبة بلمسة واحدة.</p>
+            <h2>المميزات الرئيسية:</h2>
+            <ul>
+                <li>سماكة جدارية فائقة للحماية الكاملة.</li>
+                <li>طبقة داخلية مقاومة لامتصاص الرطوبة والزيوت.</li>
+                <li>مثالية تماماً لتعليب العطور والمجوهرات.</li>
+            </ul>
+            <p>صُممت لتجعل من عملية فتح العلبة تجربة لا تُنسى لزبائنك.</p>
+        `;
+
         // High Quality Initial Data
         const initialProducts = [
             {
                 id: "1",
                 name: "صندوق تيروردا الملكي الأخضر",
                 price: "5900",
-                desc: "صندوق فاخر للغاية مصمم بهيكل قوي ومغلف بورق مخملي فاخر باللون الأخضر الداكن والذهبي. يحتوي الجزء الداخلي على بطانة حريرية لتوفير الحماية والأناقة القصوى للمحتويات.\n\nمثالي للهدايا الراقية والتحف الفنية الفريدة.",
+                desc: richDescSample1,
                 cover: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
                 gallery: [
                     "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80",
@@ -368,23 +439,11 @@
                 id: "2",
                 name: "علبة تيروردا السداسية البيضاء",
                 price: "3400",
-                desc: "علبة كرتونية صلبة ذات تصميم سداسي فريد باللون الأبيض الناصع، مع إغلاق مغناطيسي محكم وشريط ساتان أنيق.\n\nتُستخدم على نطاق واسع في تعبئة مستحضرات التجميل الراقية وحلوى المناسبات المتميزة.",
+                desc: richDescSample2,
                 cover: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80",
                 gallery: [
                     "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80",
                     "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80"
-                ],
-                pdf: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg=="
-            },
-            {
-                id: "3",
-                name: "صندوق كرافت للحفاظ على البيئة",
-                price: "1900",
-                desc: "علبة صديقة للبيئة مصنوعة من كرتون كرافت المقوى المعاد تدويره بنسبة 100%. خفيف الوزن ومتين للغاية ليناسب منتجات العناية بالبشرة والمنسوجات العضوية.\n\nيجمع بين جمالية البساطة والمسؤولية البيئية.",
-                cover: "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80",
-                    "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80"
                 ],
                 pdf: "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCjIgMCBvYmoKICA8PCAvVHlwZSAvUGFnZXMKICAgICAvS2lkcyBbIDMgMCBSIF0KICAgICAvQ291bnQgMQogID4+CmVuZG9iagozIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2UKICAgICAvUGFyZW50IDIgMCBSCiAgICAgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNCAwIFIgPj4gPj4KICAgICAvTWVkaWFCb3ggWyAwIDAgNTk1IDQyMCBdCiAgICAgL0NvbnRlbnRzIDUgMCBSCiAgPj4KZW5kb2JqCjQgMCBvYmoKICA8PCAvVHlwZSAvRm9udAogICAgIC9TdWJ0eXBlIC9UeXBlMQogICAgIC9CYXNlRm9udCAvSGVsdmV0aWNhCiAgPj4KZW5kb2JqCjUgMCBvYmoKICA8PCAvTGVuZ3RoIDcwID4+CnN0cmVhbQpCVAovRjEgMjQgVGYKNTAgMzUwIFRkCihUaXJvdXJkYSBDYXRhbG9ndWUgLSBVc2VyIE1hbnVhbCkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIGYgCjAwMDAwMDAyMjQgMDAwMDAgbiAKMDAwMDAwMjg4OCAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgL1NpemUgNgogICAgIC9Sb290IDEgMCBSCiAgPj4Kc3RhcnR4cmVmCjMyNQolJUVPRg=="
             }
@@ -394,6 +453,7 @@
         let products = JSON.parse(localStorage.getItem('tirourda_perf_data')) || initialProducts;
         let isAuth = sessionStorage.getItem('tirourda_perf_auth') === 'true';
         let swiperInstance = null;
+        let quillInstance = null;
 
         // Base64 file buffers
         let base64Cover = '';
@@ -407,7 +467,28 @@
             detectRoute();
             window.addEventListener('hashchange', detectRoute);
             setupFileHandlers();
+            initQuillEditor();
         });
+
+        // Initialize Quill WYSIWYG rich text editor
+        function initQuillEditor() {
+            quillInstance = new Quill('#editor-container', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'font': [] }, { 'size': ['small', false, 'large', 'huge'] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image', 'video'],
+                        ['clean']
+                    ]
+                }
+            });
+            // Ensure editor text starts right-to-left for Arabic
+            quillInstance.root.setAttribute('dir', 'rtl');
+        }
 
         // Router tracking only the hash
         function detectRoute() {
@@ -460,11 +541,11 @@
                     <div class="p-5 text-right flex flex-col justify-between flex-grow">
                         <div>
                             <h3 class="font-extrabold text-slate-900 text-lg leading-snug truncate">${prod.name}</h3>
-                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">${prod.desc}</p>
+                            <div class="text-xs text-slate-400 mt-1 line-clamp-2">اضغط لمعاينة كافة التفاصيل والأسعار والدليل.</div>
                         </div>
                         <div class="flex items-center justify-between pt-3 border-t border-slate-100/60 mt-3">
                             <span class="text-xs font-bold text-brand-500 flex items-center gap-1">عرض التفاصيل <i class="fa-solid fa-chevron-left text-[9px]"></i></span>
-                            <span class="text-[9px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold uppercase tracking-wider">Tirourda Pack</span>
+                            <span class="text-[9px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold uppercase tracking-wider">Tirourda Premium</span>
                         </div>
                     </div>
                 `;
@@ -473,7 +554,6 @@
 
             if (swiperInstance) swiperInstance.destroy(true, true);
 
-            // Create swiper with safe observer parameters
             swiperInstance = new Swiper('.mySwiper', {
                 effect: 'coverflow',
                 grabCursor: true,
@@ -499,7 +579,7 @@
             });
         }
 
-        // Detail section renderer
+        // Detail section renderer (Now supports Rich Text Content)
         function showProductDetails(id) {
             const prod = products.find(p => p.id === id);
             if (!prod) {
@@ -509,7 +589,9 @@
 
             document.getElementById('detailTitle').innerText = prod.name;
             document.getElementById('detailPrice').innerText = Number(prod.price).toLocaleString();
-            document.getElementById('detailDesc').innerText = prod.desc;
+            
+            // Render Rich HTML description content safely
+            document.getElementById('detailDesc').innerHTML = prod.desc;
             
             // Render main image
             const mainImg = document.getElementById('detailMainImg');
@@ -560,7 +642,7 @@
                 initAdminPanel();
                 document.getElementById('loginForm').reset();
             } else {
-                alert('خطأ في إدخال بيانات المشرف. اسم المستخدم: admin09، كلمة المرور: abobob123');
+                alert('خطأ في إدخال بيانات المشرف.');
             }
         }
 
@@ -620,7 +702,7 @@
                 tr.className = 'hover:bg-slate-50/50 transition-colors';
                 tr.innerHTML = `
                     <td class="px-6 py-4">
-                        <img src="${prod.cover}" class="w-12 h-12 object-cover rounded-xl border border-slate-100 shadow-sm animate-fade-in" onerror="handleImageError(this)">
+                        <img src="${prod.cover}" class="w-12 h-12 object-cover rounded-xl border border-slate-100 shadow-sm" onerror="handleImageError(this)">
                     </td>
                     <td class="px-6 py-4 font-extrabold text-slate-800">${prod.name}</td>
                     <td class="px-6 py-4 font-black text-brand-600">${prod.price} د.ج</td>
@@ -750,6 +832,9 @@
             document.getElementById('previewGalleryWrapper').innerHTML = '';
             document.getElementById('previewPdfText').innerText = '';
 
+            // Reset Quill Editor state
+            quillInstance.root.innerHTML = '';
+
             base64Cover = '';
             base64Gallery = [];
             base64Pdf = '';
@@ -767,7 +852,9 @@
             const pid = document.getElementById('formProductId').value;
             const name = document.getElementById('formName').value;
             const price = document.getElementById('formPrice').value;
-            const desc = document.getElementById('formDesc').value;
+            
+            // Fetch Rich Text HTML content from the editor
+            const desc = quillInstance.root.innerHTML;
 
             if (pid) {
                 // Edit Mode
@@ -816,7 +903,9 @@
             document.getElementById('formProductId').value = prod.id;
             document.getElementById('formName').value = prod.name;
             document.getElementById('formPrice').value = prod.price;
-            document.getElementById('formDesc').value = prod.desc;
+            
+            // Set Rich HTML inside Quill editor
+            quillInstance.root.innerHTML = prod.desc || '';
 
             // Load original covers/gallery previews
             document.getElementById('previewCover').src = prod.cover;
